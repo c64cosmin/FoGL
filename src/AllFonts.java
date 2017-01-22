@@ -13,13 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 public class AllFonts implements ActionListener, KeyListener, ItemListener {
-	static{
-		new AllFonts();
-	}
-	public static AllFonts instance;
-	private AllFonts(){
-		AllFonts.instance = this;
-
+	public AllFonts(){
 		genButton = new JButton("Generate");
 		genButton.addActionListener(this);
 
@@ -38,6 +32,8 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 	    }
 		allFontsComp.addItemListener(this);
 		selectedFont = fonts[0];
+		
+		fontCanvas =  new FontCanvas();
 	}
 	
 	private JFrame window;
@@ -88,7 +84,7 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 		}
 	}
 
-	private FontCanvas fontCanvas = new FontCanvas();
+	private FontCanvas fontCanvas = null;
 	private int texSizeX = 512;
 	private int texSizeY = 512;
 	private int fontSize = 10;
@@ -98,6 +94,7 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 
 	@Override
 	public void keyPressed(KeyEvent e) {
+		redrawAll();
 	}
 
 	@Override
@@ -116,24 +113,28 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 		catch(NumberFormatException ex){
 			
 		}
-		this.fontCanvas.setText(fontStringComp.getText());
-		this.fontCanvas.setSize(this.texSizeX, this.texSizeY);
-		this.fontCanvas.setFontSize(this.fontSize);
-		fontCanvas.repaint();
+		redrawAll();
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
+		redrawAll();
 	}
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if(ItemEvent.SELECTED == e.getStateChange()){
 			selectedFont = fonts[allFontsComp.getSelectedIndex()];
-			fontCanvas.setFont(selectedFont);
-			fontCanvas.setText(fontStringComp.getText());
-			fontCanvas.repaint();
+			redrawAll();
 		}
+	}
+	
+	public void redrawAll(){
+		this.fontCanvas.setText(fontStringComp.getText());
+		this.fontCanvas.setSize(this.texSizeX, this.texSizeY);
+		this.fontCanvas.setFontSize(this.fontSize);
+		this.fontCanvas.setFont(selectedFont);
+		this.fontCanvas.setText(fontStringComp.getText());
+		this.fontCanvas.repaint();
 	}
 }

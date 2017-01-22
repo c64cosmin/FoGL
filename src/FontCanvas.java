@@ -9,7 +9,7 @@ public class FontCanvas extends Canvas{
 	private int fontSize;
 
 	public FontCanvas(){
-		this.setSize(512, 512);
+		//this.setSize(512, 512);
 		this.setVisible(true);
 		fontSize = 10;
 	}
