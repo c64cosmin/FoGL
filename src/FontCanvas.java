@@ -2,6 +2,7 @@ import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 public class FontCanvas extends Canvas{
 	private Font font;
@@ -23,7 +24,6 @@ public class FontCanvas extends Canvas{
 	public void paint(Graphics g){
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g.setColor(Color.WHITE);
 		font = font.deriveFont((float)fontSize);
 		g.setFont(font);
 		split.drawChar(g, text);

@@ -34,6 +34,7 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 		selectedFont = fonts[0];
 		
 		fontCanvas =  new FontCanvas();
+		redrawAll();
 	}
 	
 	private JFrame window;
