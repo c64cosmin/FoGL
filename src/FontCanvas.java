@@ -7,11 +7,13 @@ public class FontCanvas extends Canvas{
 	private Font font;
 	private String text;
 	private int fontSize;
+	private LetterSplitter split;
 
 	public FontCanvas(){
 		//this.setSize(512, 512);
 		this.setVisible(true);
 		fontSize = 10;
+		split = new LetterSplitter();
 	}
 	
 	public void update(Graphics g){
@@ -24,7 +26,7 @@ public class FontCanvas extends Canvas{
 		g.setColor(Color.WHITE);
 		font = font.deriveFont((float)fontSize);
 		g.setFont(font);
-		g.drawString(text, 30, 30);
+		split.drawChar(g, text);
 	}
 	
 	public void setFont(Font f){
