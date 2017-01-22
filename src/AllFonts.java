@@ -1,5 +1,3 @@
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
@@ -63,13 +61,13 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 		return fontStringComp;
 	}
 	
-	private JTextArea fontSizeComp = new JTextArea("5");
+	private JTextArea fontSizeComp = new JTextArea("10");
 	public JTextArea getFontsSize() {
 		return fontSizeComp;
 	}
 	
-	private JTextArea texSizeXComp = new JTextArea("128");
-	private JTextArea texSizeYComp = new JTextArea("128");
+	private JTextArea texSizeXComp = new JTextArea("512");
+	private JTextArea texSizeYComp = new JTextArea("512");
 	public JTextArea getTexSizeX() {
 		return texSizeXComp;
 	}
@@ -85,18 +83,15 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() instanceof JButton){
-			fontSizeComp.setText("sfsdf");
-			fontCanvas.setSize(1024, 1024);
-		}else{
-			fontCanvas.setSize(10,20);
+		if(e.getSource() == genButton){
+			System.out.println("Output file");
 		}
 	}
 
 	private FontCanvas fontCanvas = new FontCanvas();
-	private int texSizeX = 128;
-	private int texSizeY = 128;
-	private int fontSize = 5;
+	private int texSizeX = 512;
+	private int texSizeY = 512;
+	private int fontSize = 10;
 	public FontCanvas getCanvas() {
 		return fontCanvas;
 	}
@@ -107,28 +102,38 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(e.getSource() == texSizeXComp){
-			this.texSizeX = Integer.parseInt(texSizeXComp.getText());
+		try{
+			if(e.getSource() == texSizeXComp){
+				this.texSizeX = Integer.parseInt(texSizeXComp.getText());
+			}
+			if(e.getSource() == texSizeYComp){
+				this.texSizeY = Integer.parseInt(texSizeYComp.getText());
+			}
+			if(e.getSource() == fontSizeComp){
+				this.fontSize  = Integer.parseInt(fontSizeComp.getText());
+			}
 		}
-		if(e.getSource() == texSizeYComp){
-			this.texSizeY = Integer.parseInt(texSizeYComp.getText());
+		catch(NumberFormatException ex){
+			
 		}
-		if(e.getSource() == fontSizeComp){
-			this.fontSize  = Integer.parseInt(fontSizeComp.getText());
-		}
+		this.fontCanvas.setText(fontStringComp.getText());
 		this.fontCanvas.setSize(this.texSizeX, this.texSizeY);
+		this.fontCanvas.setFontSize(this.fontSize);
+		fontCanvas.repaint();
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if(ItemEvent.SELECTED == e.getStateChange()){
 			selectedFont = fonts[allFontsComp.getSelectedIndex()];
+			fontCanvas.setFont(selectedFont);
+			fontCanvas.setText(fontStringComp.getText());
+			fontCanvas.repaint();
 		}
 	}
 }

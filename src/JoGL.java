@@ -37,8 +37,8 @@ public class JoGL {
 		mainPanel.setLayout(new BorderLayout());
 		mainPanel.add(leftPanel, BorderLayout.WEST);
 		mainPanel.add(AllFonts.instance.getCanvas(), BorderLayout.CENTER);
-		
-		win.setSize(500, 500);
+
+		win.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		win.add(mainPanel);
 		win.setVisible(true);
