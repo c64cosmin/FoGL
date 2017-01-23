@@ -88,7 +88,7 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 			  File file = fileChooser.getSelectedFile();
 			  String filename = file.getAbsolutePath();
 			  String filename_img = filename + ".png";
-			  String filename_map = filename + ".fnt";
+			  String filename_map = filename + ".fntmap";
 			  
 			  fontCanvas.exportAllLetters(filename_img, filename_map);
 			}

@@ -92,6 +92,7 @@ public class FontCanvas extends Canvas{
 	    
 		try {
 			PrintWriter mapOut = new PrintWriter(new File(mapName));
+			mapOut.println(this.getWidth() + " " + this.getHeight());
 			int x = 0;
 			int y = 0;
 			int n = text.length();
