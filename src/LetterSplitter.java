@@ -34,7 +34,7 @@ public class LetterSplitter {
 		prop.height = g.getFontMetrics().getHeight();
 		prop.advance = g.getFontMetrics().stringWidth(c);
 		prop.ascent = g.getFontMetrics().getAscent();
-	    prop.bearing = leftSideBearing(g, c)-1;
+	    prop.bearing = leftSideBearing(g, c);
 	    
 	    return prop;
 	}
@@ -45,13 +45,13 @@ public class LetterSplitter {
 		CharProperty prop = getCharProperties(g, c);
 		if(grid){
 			g.setColor(Color.GREEN);
-			g.drawRect(x-prop.bearing, y, prop.advance, prop.ascent);
+			g.drawRect(x-prop.bearing + 1, y, prop.advance, prop.ascent);
 			g.setColor(Color.BLUE);
-			g.drawRect(x-prop.bearing, y, prop.advance, prop.height);
+			g.drawRect(x-prop.bearing + 1, y, prop.advance, prop.height);
 			g.setColor(Color.RED);
 			g.drawRect(x, y, prop.width, prop.height);
 		}
 		g.setColor(Color.WHITE);
-		g.drawString(c, x-prop.bearing, y+prop.ascent);
+		g.drawString(c, x-prop.bearing + 1, y+prop.ascent);
 	}
 }

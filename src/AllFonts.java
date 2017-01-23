@@ -1,4 +1,5 @@
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -90,8 +91,7 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 			  String filename_img = filename + ".png";
 			  String filename_map = filename + ".fnt";
 			  
-			  fontCanvas.exportImage(filename_img);
-			  fontCanvas.exportMap(filename_map);
+			  fontCanvas.exportAllLetters(filename_img, filename_map);
 			}
 		}
 	}
