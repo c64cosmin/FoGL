@@ -30,11 +30,11 @@ public class LetterSplitter {
 		if(c.isEmpty())return prop;
 
 		Rectangle bound = getStringBounds(g, c);
-		prop.width = bound.width;
+		prop.width = bound.width + 2;
 		prop.height = g.getFontMetrics().getHeight();
 		prop.advance = g.getFontMetrics().stringWidth(c);
 		prop.ascent = g.getFontMetrics().getAscent();
-	    prop.bearing = leftSideBearing(g, c)-2;
+	    prop.bearing = leftSideBearing(g, c)-1;
 	    
 	    return prop;
 	}
@@ -44,10 +44,12 @@ public class LetterSplitter {
 		g.setColor(Color.WHITE);
 		CharProperty prop = getCharProperties(g, c);
 		if(grid){
-			g.setColor(Color.RED);
-			g.drawRect(x, y, prop.width, prop.height);
+			g.setColor(Color.GREEN);
+			g.drawRect(x-prop.bearing, y, prop.advance, prop.ascent);
 			g.setColor(Color.BLUE);
 			g.drawRect(x-prop.bearing, y, prop.advance, prop.height);
+			g.setColor(Color.RED);
+			g.drawRect(x, y, prop.width, prop.height);
 		}
 		g.setColor(Color.WHITE);
 		g.drawString(c, x-prop.bearing, y+prop.ascent);

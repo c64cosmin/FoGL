@@ -6,9 +6,11 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.File;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
@@ -81,7 +83,16 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == genButton){
-			System.out.println("Output file");
+			JFileChooser fileChooser = new JFileChooser();
+			if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+			  File file = fileChooser.getSelectedFile();
+			  String filename = file.getAbsolutePath();
+			  String filename_img = filename + ".png";
+			  String filename_map = filename + ".fnt";
+			  
+			  fontCanvas.exportImage(filename_img);
+			  fontCanvas.exportMap(filename_map);
+			}
 		}
 	}
 
