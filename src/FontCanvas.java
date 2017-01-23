@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import javax.imageio.ImageIO;
 
 public class FontCanvas extends Canvas{
+	private static final long serialVersionUID = -5593088216030819037L;
 	private Font font;
 	private String text;
 	private int fontSize;
