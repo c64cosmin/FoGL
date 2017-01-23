@@ -14,10 +14,10 @@ public class LetterSplitter {
 		return g.getFontMetrics().getHeight();
 	}
 	
-	private Rectangle getStringBounds(Graphics g, String str, int x, int y){
+	private Rectangle getStringBounds(Graphics g, String str){
 		FontRenderContext frc = new FontRenderContext(g.getFont().getTransform(), true, true);
 		GlyphVector gv = g.getFont().createGlyphVector(frc, str);
-		return gv.getPixelBounds(frc, x, y);
+		return gv.getPixelBounds(frc, 0, 0);
 	}
 	
 	private int leftSideBearing(Graphics g, String str){
@@ -25,20 +25,31 @@ public class LetterSplitter {
 		return (int) g.getFont().createGlyphVector(frc, str).getGlyphMetrics(0).getLSB();
 	}
 	
-	public void drawChar(Graphics g, String c){
-		int x = 100;
-		int y = 100;
+	public CharProperty getCharProperties(Graphics g, String c){
+		CharProperty prop = new CharProperty();
+		if(c.isEmpty())return prop;
+
+		Rectangle bound = getStringBounds(g, c);
+		prop.width = bound.width;
+		prop.height = g.getFontMetrics().getHeight();
+		prop.advance = g.getFontMetrics().stringWidth(c);
+		prop.ascent = g.getFontMetrics().getAscent();
+	    prop.bearing = leftSideBearing(g, c)-2;
+	    
+	    return prop;
+	}
+	
+	public void drawChar(Graphics g, String c, int x, int y, boolean grid){
+		if(c.isEmpty())return;
 		g.setColor(Color.WHITE);
-		g.drawString(c, x, y);
-		Rectangle bound = getStringBounds(g, c, x, y);
-		int w = bound.width;
-		int h = g.getFontMetrics().getHeight();
-		int aboveLine = g.getFontMetrics().getAscent();
-		int leftBearing = leftSideBearing(g, c);
+		CharProperty prop = getCharProperties(g, c);
+		if(grid){
+			g.setColor(Color.RED);
+			g.drawRect(x, y, prop.width, prop.height);
+			g.setColor(Color.BLUE);
+			g.drawRect(x-prop.bearing, y, prop.advance, prop.height);
+		}
 		g.setColor(Color.WHITE);
-		g.drawRect(x+leftBearing-1, y-aboveLine, w, h);
-		g.setColor(Color.RED);
-		w = g.getFontMetrics().stringWidth(c);
-		//g.drawRect(x, y-aboveLine, w, h);
+		g.drawString(c, x-prop.bearing, y+prop.ascent);
 	}
 }

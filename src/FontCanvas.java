@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 
 public class FontCanvas extends Canvas{
 	private Font font;
@@ -22,11 +23,15 @@ public class FontCanvas extends Canvas{
 	}
 	
 	public void paint(Graphics g){
+		((Graphics2D)g).setRenderingHint(
+		        RenderingHints.KEY_TEXT_ANTIALIASING,
+		        RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
 		font = font.deriveFont((float)fontSize);
 		g.setFont(font);
-		split.drawChar(g, text);
+		
+		drawAllLetters(g, text, true);
 	}
 	
 	public void setFont(Font f){
@@ -39,5 +44,22 @@ public class FontCanvas extends Canvas{
 
 	public void setFontSize(int fontSize) {
 		this.fontSize = fontSize;
+	}
+	
+	public void drawAllLetters(Graphics g, String str, boolean grid){
+		if(str.isEmpty())str = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
+		int x = 0;
+		int y = 0;
+		int n = str.length();
+		for(int i=0;i<n;i++){
+			String c = str.substring(i, i+1);
+			CharProperty prop = split.getCharProperties(g, c);
+			if(x+prop.width >= this.getWidth()){
+				y += prop.height;
+				x = 0;
+			}
+			split.drawChar(g, c, x, y, grid);
+			x += prop.width;
+		}
 	}
 }
