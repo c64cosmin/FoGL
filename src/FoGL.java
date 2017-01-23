@@ -8,12 +8,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class JoGL {
+public class FoGL {
 	AllFonts fonts = null;
 	public static void main(String[] args){
-		new JoGL();
+		new FoGL();
 	}
-	public JoGL(){
+	public FoGL(){
 		JFrame win = new JFrame();
 		fonts = new AllFonts();
 		fonts.setWindow(win);
