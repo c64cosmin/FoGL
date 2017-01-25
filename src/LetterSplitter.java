@@ -29,7 +29,7 @@ public class LetterSplitter {
 		if(c.isEmpty())return prop;
 
 		Rectangle bound = getStringBounds(g, c);
-		prop.width = bound.width + 2;
+		prop.width = bound.width;
 		prop.height = g.getFontMetrics().getHeight();
 		prop.advance = g.getFontMetrics().stringWidth(c);
 		prop.ascent = g.getFontMetrics().getAscent();

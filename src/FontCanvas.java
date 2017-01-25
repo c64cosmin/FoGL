@@ -69,12 +69,12 @@ public class FontCanvas extends Canvas{
 		for(int i=0;i<n;i++){
 			String c = str.substring(i, i+1);
 			CharProperty prop = split.getCharProperties(g, c);
-			if(x+prop.width >= this.getWidth()){
+			if(x+prop.width + 2 >= this.getWidth()){
 				y += prop.height + 1;
 				x = 0;
 			}
 			split.drawChar(g, c, x, y, grid);
-			x += prop.width;
+			x += prop.width + 2;
 		}
 	}
 	
@@ -99,13 +99,13 @@ public class FontCanvas extends Canvas{
 			for(int i=0;i<n;i++){
 				String c = text.substring(i, i+1);
 				CharProperty prop = split.getCharProperties(graphics, c);
-				mapOut.println(c + " " + x + " " + y + " " + prop.width + " " + prop.height + " " + prop.advance + " " + prop.bearing + " " + prop.ascent);
-				if(x+prop.width >= this.getWidth()){
+				if(x+prop.width + 2 >= this.getWidth()){
 					y += prop.height + 1;
 					x = 0;
 				}
 				split.drawChar(g, c, x, y, false);
-				x += prop.width;
+				mapOut.println(c + " " + x + " " + y + " " + prop.width + " " + prop.height + " " + prop.advance + " " + prop.bearing + " " + prop.ascent);
+				x += prop.width + 2;
 			}
 			mapOut.close();
 			
