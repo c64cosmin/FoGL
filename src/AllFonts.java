@@ -21,11 +21,11 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 
 		fontStringComp = new JTextArea("`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?");
 		fontStringComp.addKeyListener(this);
-		
+
 		fontSizeComp.addKeyListener(this);
 		texSizeXComp.addKeyListener(this);
 		texSizeYComp.addKeyListener(this);
-		
+
 		allFontsComp = new JComboBox<String>();
 	    GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
 		fonts = e.getAllFonts(); // Get the fonts
@@ -34,47 +34,47 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 	    }
 		allFontsComp.addItemListener(this);
 		selectedFont = fonts[0];
-		
-		fontCanvas =  new FontCanvas();
+
+		fontCanvas = new FontCanvas();
 		redrawAll();
 	}
-	
+
 	private JFrame window;
 	public void setWindow(JFrame win){
 		this.window = win;
 	}
-	
+
 	private Font selectedFont;
 	private Font[] fonts;
 	private JComboBox<String> allFontsComp;
 	public JComboBox<String> getFonts(){
 		return allFontsComp;
 	}
-	
+
 	public Font getFont(){
 		return selectedFont;
 	}
-	
+
 	private JTextArea fontStringComp = null;
 	public JTextArea getFontsString(){
 		return fontStringComp;
 	}
-	
+
 	private JTextArea fontSizeComp = new JTextArea("10");
 	public JTextArea getFontsSize() {
 		return fontSizeComp;
 	}
-	
+
 	private JTextArea texSizeXComp = new JTextArea("512");
 	private JTextArea texSizeYComp = new JTextArea("512");
 	public JTextArea getTexSizeX() {
 		return texSizeXComp;
 	}
-	
+
 	public JTextArea getTexSizeY() {
 		return texSizeYComp;
 	}
-	
+
 	private JButton genButton = null;
 	public JButton getGenButton(){
 		return genButton;
@@ -89,7 +89,7 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 			  String filename = file.getAbsolutePath();
 			  String filename_img = filename + ".png";
 			  String filename_map = filename + ".fntmap";
-			  
+
 			  fontCanvas.exportAllLetters(filename_img, filename_map);
 			}
 		}
@@ -122,7 +122,7 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 			}
 		}
 		catch(NumberFormatException ex){
-			
+
 		}
 		redrawAll();
 	}
@@ -139,7 +139,7 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 			redrawAll();
 		}
 	}
-	
+
 	public void redrawAll(){
 		this.fontCanvas.setText(fontStringComp.getText());
 		this.fontCanvas.setSize(this.texSizeX, this.texSizeY);
