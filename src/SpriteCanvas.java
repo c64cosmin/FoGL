@@ -1,13 +1,31 @@
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
-public class SpriteCanvas extends Canvas{
+import javax.imageio.ImageIO;
+
+public class SpriteCanvas extends Canvas implements MouseMotionListener{
+    public final int outputSize = 1024;
 	private static final long serialVersionUID = -5593088216030819037L;
+	private BufferedImage gridImage;
 	private Graphics graphics;
+	public int cameraX;
+	public int cameraY;
 
 	public SpriteCanvas(){
 		this.setVisible(true);
+		try {
+		    gridImage = ImageIO.read(new File("grid.png"));
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            System.out.println("Missing grid.png");
+        }
 	}
 
 	@Override
@@ -22,11 +40,29 @@ public class SpriteCanvas extends Canvas{
 	}
 
 	private void render(Graphics g, boolean grid){
-		g.setColor(Color.BLUE);
+	    g.setColor(Color.darkGray);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		g.drawImage(gridImage, -cameraX*SpriteHandler.instance.zoom, -cameraY*SpriteHandler.instance.zoom, outputSize*SpriteHandler.instance.zoom, outputSize*SpriteHandler.instance.zoom, null);
 		for(int i=0;i<SpriteHandler.instance.spritesImages.size();i++){
-		    g.drawImage(SpriteHandler.instance.spritesImages.get(i), 0, 0, null);
+		    int x = SpriteHandler.instance.spritesImagesPosition.get(i).x-cameraX;
+            int y = SpriteHandler.instance.spritesImagesPosition.get(i).y-cameraY;
+            int w = SpriteHandler.instance.spritesImages.get(i).getWidth();
+            int h = SpriteHandler.instance.spritesImages.get(i).getHeight();
+		    g.drawImage(SpriteHandler.instance.spritesImages.get(i),
+		                x*SpriteHandler.instance.zoom, y*SpriteHandler.instance.zoom, w*SpriteHandler.instance.zoom, h*SpriteHandler.instance.zoom,
+		                null);
 		}
+		g.setColor(Color.BLUE);
+
+		if(SpriteHandler.instance.getSelectedSprite() != null && SpriteHandler.instance.selectedFrame > 0){
+    		for(int i=0;i<SpriteHandler.instance.getSelectedSprite().frames.size();i++){
+    		    SpriteHandler.instance.getSelectedSprite().frames.get(i).draw(g, cameraX, cameraY, SpriteHandler.instance.zoom, i+1);
+    		}
+    		g.setColor(Color.RED);
+    		SpriteHandler.instance.getSelectedSprite().frames.get(SpriteHandler.instance.selectedFrame-1).draw(g, cameraX, cameraY, SpriteHandler.instance.zoom,0);
+		}
+		g.setColor(Color.gray);
+        g.drawRect(-cameraX*SpriteHandler.instance.zoom, -cameraY*SpriteHandler.instance.zoom, outputSize*SpriteHandler.instance.zoom, outputSize*SpriteHandler.instance.zoom);
 	}
 
 	public void exportAllLetters(String imageName, String mapName){
@@ -73,4 +109,18 @@ public class SpriteCanvas extends Canvas{
 	        e.printStackTrace();
 	    }*/
 	}
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+        // TODO Auto-generated method stub
+
+    }
+
+    public int mouseX;
+    public int mouseY;
+    @Override
+    public void mouseMoved(MouseEvent e) {
+        this.mouseX = e.getX();
+        this.mouseY = e.getY();
+    }
 }

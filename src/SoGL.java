@@ -32,6 +32,10 @@ public class SoGL {
 
         win.setExtendedState(JFrame.MAXIMIZED_BOTH);
         win.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        win.addKeyListener(handler);
+        handler.getCanvas().addKeyListener(handler);
+        win.addMouseMotionListener(handler.getCanvas());
+        handler.getCanvas().addMouseMotionListener(handler.getCanvas());
         win.add(mainPanel);
         win.setVisible(true);
     }

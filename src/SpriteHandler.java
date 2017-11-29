@@ -1,4 +1,5 @@
 import java.awt.GridLayout;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -32,7 +33,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 	    buttons.add(new MyButton("+", new Runnable(){
 	        @Override
             public void run(){
-	            SpriteHandler.instance.zoom <<= 1;
+	            SpriteHandler.instance.zoomIn();
 	        }
 	    }));
 	   zoomInButton = buttons.get(buttons.size()-1);
@@ -40,7 +41,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         buttons.add(new MyButton("-", new Runnable(){
             @Override
             public void run(){
-                if(SpriteHandler.instance.zoom > 1)SpriteHandler.instance.zoom >>= 1;
+                SpriteHandler.instance.zoomOut();
             }
          }));
         zoomOutButton = buttons.get(buttons.size()-1);
@@ -70,7 +71,12 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
        buttons.add(new MyButton("Open sheet", new Runnable(){
            @Override
            public void run(){
+               JFileChooser fileChooser = new JFileChooser();
+               if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                 File file = fileChooser.getSelectedFile();
 
+                 SpriteSheet.openSheet(file.getAbsolutePath());
+               }
            }
        }));
 	    openImageButton= buttons.get(buttons.size()-1);
@@ -78,10 +84,28 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 	       buttons.add(new MyButton("Save sheet", new Runnable(){
 	           @Override
 	           public void run(){
+	               JFileChooser fileChooser = new JFileChooser();
+	               if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+	                 File file = fileChooser.getSelectedFile();
 
+	                 SpriteSheet.saveSheet(file.getAbsolutePath());
+	               }
 	           }
 	       }));
         saveImageButton = buttons.get(buttons.size()-1);
+
+        buttons.add(new MyButton("Export sheet", new Runnable(){
+            @Override
+            public void run(){
+                JFileChooser fileChooser = new JFileChooser();
+                if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                  File file = fileChooser.getSelectedFile();
+
+                  //SpriteHandler.instance.addImage(file);
+                }
+            }
+        }));
+        exportImageButton = buttons.get(buttons.size()-1);
 
         buttons.add(new MyButton("Add sprite", new Runnable(){
             @Override
@@ -121,7 +145,16 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         buttons.add(new MyButton("Add frame", new Runnable(){
             @Override
             public void run(){
-                SpriteHandler.instance.getSelectedSprite().addFrame(new Rectangle());
+                int w = 64;
+                int h = 64;
+                if(SpriteHandler.instance.getSelectedSprite() != null){
+                    ArrayList<Frame> frames = SpriteHandler.instance.getSelectedSprite().frames;
+                    if(frames.size()>0){
+                        w = frames.get(frames.size()-1).box.width;
+                        h = frames.get(frames.size()-1).box.height;
+                    }
+                }
+                SpriteHandler.instance.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(32, 32));
             }
         }));
         addFrameButton = buttons.get(buttons.size()-1);
@@ -129,7 +162,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         buttons.add(new MyButton("Del frame", new Runnable(){
             @Override
             public void run(){
-                SpriteHandler.instance.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame);
+                SpriteHandler.instance.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame-1);
             }
         }));
         delFrameButton = buttons.get(buttons.size()-1);
@@ -150,6 +183,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         spriteCanvas = new SpriteCanvas();
 
         spritesImages = new ArrayList<BufferedImage>();
+        spritesImagesPosition = new ArrayList<Point>();
         sprites = new ArrayList<Sprite>();
 
         currentSprite = 0;
@@ -163,9 +197,18 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 	    redrawAll();
 	}
 
-	protected Sprite getSelectedSprite() {
+	protected void zoomIn() {
+        SpriteHandler.instance.zoom <<= 1;
+    }
+
+    protected void zoomOut() {
+        if(SpriteHandler.instance.zoom > 1)SpriteHandler.instance.zoom >>= 1;
+    }
+
+    protected Sprite getSelectedSprite() {
 	    refreshCounter();
-        return this.sprites.get(currentSprite);
+	    if(this.currentSprite != -1 && this.currentSprite < this.sprites.size())return this.sprites.get(currentSprite);
+	    return null;
     }
 
     protected void removeSprite(int index) {
@@ -183,16 +226,19 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     protected void removeImage(int index) {
         if(index != -1 && index <= spritesImages.size()){
             spritesImages.remove(index);
+            spritesImagesPosition.remove(index);
             imagesCombo.removeItemAt(index);
         }
     }
 
     public ArrayList<BufferedImage> spritesImages;
+    public ArrayList<Point> spritesImagesPosition;
 	protected void addImage(File file) {
 	    BufferedImage img = null;
 	    try {
 	        img = ImageIO.read(file);
 	        spritesImages.add(img);
+	        spritesImagesPosition.add(new Point(0,0));
 	        imagesCombo.addItem(file.getName());
 	    } catch (IOException e) {
 	    }
@@ -225,11 +271,13 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
     private JButton openImageButton;
     private JButton saveImageButton;
+    private JButton exportImageButton;
     public JPanel getImageButton(){
         JPanel doublePanel = new JPanel();
-        doublePanel.setLayout(new GridLayout(1,2));
+        doublePanel.setLayout(new GridLayout(1,3));
         doublePanel.add(openImageButton);
         doublePanel.add(saveImageButton);
+        doublePanel.add(exportImageButton);
         return doublePanel;
     }
 
@@ -306,11 +354,54 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+	    char c = e.getKeyChar();
+	    int move = 16;
+	    if(c == 'w')spriteCanvas.cameraY -= move;
+	    if(c == 's')spriteCanvas.cameraY += move;
+	    if(c == 'a')spriteCanvas.cameraX -= move;
+        if(c == 'd')spriteCanvas.cameraX += move;
+        if(c == 'q'){
+            int x = spriteCanvas.mouseX/zoom + spriteCanvas.cameraX;
+            int y = spriteCanvas.mouseY/zoom + spriteCanvas.cameraY;
+            this.getSelectedSprite().frames.get(selectedFrame-1).box.x = x;
+            this.getSelectedSprite().frames.get(selectedFrame-1).box.y = y;
+        }
+        if(c == 'e')
+        if(this.getSelectedSprite() != null){
+            int x = this.getSelectedSprite().frames.get(selectedFrame-1).box.x;
+            int y = this.getSelectedSprite().frames.get(selectedFrame-1).box.y;
+            int w = spriteCanvas.mouseX/zoom + spriteCanvas.cameraX;
+            int h = spriteCanvas.mouseY/zoom + spriteCanvas.cameraY;
+            this.getSelectedSprite().frames.get(selectedFrame-1).box.width = w-x;
+            this.getSelectedSprite().frames.get(selectedFrame-1).box.height = h-y;
+        }
+        if(c == 'c')
+        if(this.getSelectedSprite() != null){
+            int x = spriteCanvas.mouseX/zoom + spriteCanvas.cameraX;
+            int y = spriteCanvas.mouseY/zoom + spriteCanvas.cameraY;
+            this.getSelectedSprite().frames.get(selectedFrame-1).center.x = x;
+            this.getSelectedSprite().frames.get(selectedFrame-1).center.y = y;
+        }
+        if(c == 'r')spriteCanvas.cameraX = spriteCanvas.cameraY = 0;
+        if(c == 'z'){
+            int x = spriteCanvas.mouseX/zoom + spriteCanvas.cameraX;
+            int y = spriteCanvas.mouseY/zoom + spriteCanvas.cameraY;
+            this.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).x = x;
+            this.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).y = y;
+        }
+        if(c == '+'){
+            this.zoomIn();
+        }
+        if(c == '-'){
+            this.zoomOut();
+        }
+        if(spriteCanvas.cameraX<-4)spriteCanvas.cameraX=-4;
+        if(spriteCanvas.cameraY<-4)spriteCanvas.cameraY=-4;
 		redrawAll();
 	}
 
 	private int currentSprite;
-	private int selectedFrame;
+	public int selectedFrame;
 	private int numberOfFrames;
 	@Override
 	public void itemStateChanged(ItemEvent e) {
@@ -320,7 +411,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
 	private void refreshCounter() {
 	    this.currentSprite = this.spritesCombo.getSelectedIndex();
-	    System.out.println(this.currentSprite);
         if(this.currentSprite != -1 && this.currentSprite < this.sprites.size()){
             this.numberOfFrames = sprites.get(this.currentSprite).getNumberOfFrames();
             if(this.selectedFrame > this.numberOfFrames)this.selectedFrame = this.numberOfFrames;
@@ -332,6 +422,5 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     public void redrawAll(){
         refreshCounter();
 		this.spriteCanvas.repaint();
-		System.out.println(zoom);
 	}
 }
