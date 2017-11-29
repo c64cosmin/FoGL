@@ -13,13 +13,14 @@ public class SoGL {
 
         //left side
         JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new GridLayout(8,1));
+        leftPanel.setLayout(new GridLayout(9,1));
         leftPanel.add(handler.getZoomInOutButton());
         leftPanel.add(handler.getAddImageButton());
+        leftPanel.add(handler.getImagesCombo());
         leftPanel.add(handler.getImageButton());
-        leftPanel.add(handler.getSpritesCombo());
         leftPanel.add(handler.getSpriteNameArea());
         leftPanel.add(handler.getSpriteButton());
+        leftPanel.add(handler.getSpritesCombo());
         leftPanel.add(handler.getSpriteIndicator());
         leftPanel.add(handler.getFrameButton());
 

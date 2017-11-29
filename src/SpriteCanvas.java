@@ -24,6 +24,9 @@ public class SpriteCanvas extends Canvas{
 	private void render(Graphics g, boolean grid){
 		g.setColor(Color.BLUE);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		for(int i=0;i<SpriteHandler.instance.spritesImages.size();i++){
+		    g.drawImage(SpriteHandler.instance.spritesImages.get(i), 0, 0, null);
+		}
 	}
 
 	public void exportAllLetters(String imageName, String mapName){
