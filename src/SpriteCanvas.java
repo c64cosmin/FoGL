@@ -54,15 +54,15 @@ public class SpriteCanvas extends Canvas implements MouseMotionListener{
 		}
 		g.setColor(Color.BLUE);
 
-		if(SpriteHandler.instance.getSelectedSprite() != null && SpriteHandler.instance.selectedFrame > 0){
+		if(SpriteHandler.instance.getSelectedSprite() != null &&
+		   SpriteHandler.instance.selectedFrame > 0 &&
+		   SpriteHandler.instance.getSelectedSprite().frames.size() > 0){
     		for(int i=0;i<SpriteHandler.instance.getSelectedSprite().frames.size();i++){
     		    SpriteHandler.instance.getSelectedSprite().frames.get(i).draw(g, cameraX, cameraY, SpriteHandler.instance.zoom, i+1);
     		}
     		g.setColor(Color.RED);
     		SpriteHandler.instance.getSelectedSprite().frames.get(SpriteHandler.instance.selectedFrame-1).draw(g, cameraX, cameraY, SpriteHandler.instance.zoom,0);
 		}
-		g.setColor(Color.gray);
-        g.drawRect(-cameraX*SpriteHandler.instance.zoom, -cameraY*SpriteHandler.instance.zoom, outputSize*SpriteHandler.instance.zoom, outputSize*SpriteHandler.instance.zoom);
 	}
 
 	public void exportAllLetters(String imageName, String mapName){

@@ -16,15 +16,26 @@ public class Frame {
         int y = (int) (box.getY()-cameraY);
         int w = (int) box.getWidth();
         int h = (int) box.getHeight();
-        int cx = (int) (center.getX()-cameraX)*SpriteHandler.instance.zoom;
-        int cy = (int) (center.getY()-cameraY)*SpriteHandler.instance.zoom;
+        int cx = (int) (center.getX() + x)*SpriteHandler.instance.zoom;
+        int cy = (int) (center.getY() + y)*SpriteHandler.instance.zoom;
         g.drawRect(x*SpriteHandler.instance.zoom, y*SpriteHandler.instance.zoom, w*SpriteHandler.instance.zoom, h*SpriteHandler.instance.zoom);
         g.drawLine(cx-4, cy-4, cx+4, cy+4);
         g.drawLine(cx+4, cy-4, cx-4, cy+4);
         //g.drawString("nm:"+spriteName, x*SpriteHandler.instance.zoom, y*SpriteHandler.instance.zoom+15);
-        g.drawString("pos:"+x+","+y, x*SpriteHandler.instance.zoom, y*SpriteHandler.instance.zoom+30);
-        g.drawString("dim:"+w+","+h, x*SpriteHandler.instance.zoom, y*SpriteHandler.instance.zoom+45);
-        if(index!=0)g.drawString("n:" + index, x*SpriteHandler.instance.zoom, y*SpriteHandler.instance.zoom+60);
+        g.drawString("pos:"+x+","+y, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+30);
+        g.drawString("dim:"+w+","+h, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+45);
+        if(index!=0)g.drawString("n:" + index, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+60);
 
+    }
+
+    public String getSerial() {
+        String ret = "";
+        ret += box.x + " ";
+        ret += box.y + " ";
+        ret += box.width + " ";
+        ret += box.height + " ";
+        ret += center.x + " ";
+        ret += center.y + " ";
+        return ret;
     }
 }

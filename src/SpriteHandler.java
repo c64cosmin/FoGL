@@ -147,14 +147,18 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
             public void run(){
                 int w = 64;
                 int h = 64;
+                int cx = 32;
+                int cy = 32;
                 if(SpriteHandler.instance.getSelectedSprite() != null){
                     ArrayList<Frame> frames = SpriteHandler.instance.getSelectedSprite().frames;
                     if(frames.size()>0){
                         w = frames.get(frames.size()-1).box.width;
                         h = frames.get(frames.size()-1).box.height;
+                        cx = frames.get(frames.size()-1).center.x;
+                        cy = frames.get(frames.size()-1).center.y;
                     }
                 }
-                SpriteHandler.instance.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(32, 32));
+                SpriteHandler.instance.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(cx, cy));
             }
         }));
         addFrameButton = buttons.get(buttons.size()-1);
@@ -184,6 +188,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
         spritesImages = new ArrayList<BufferedImage>();
         spritesImagesPosition = new ArrayList<Point>();
+        spritesImagesPath = new ArrayList<String>();
         sprites = new ArrayList<Sprite>();
 
         currentSprite = 0;
@@ -233,15 +238,21 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
     public ArrayList<BufferedImage> spritesImages;
     public ArrayList<Point> spritesImagesPosition;
+    public ArrayList<String> spritesImagesPath;
 	protected void addImage(File file) {
-	    BufferedImage img = null;
-	    try {
-	        img = ImageIO.read(file);
-	        spritesImages.add(img);
-	        spritesImagesPosition.add(new Point(0,0));
-	        imagesCombo.addItem(file.getName());
-	    } catch (IOException e) {
-	    }
+	    addImage(file, 0, 0);
+    }
+
+    public void addImage(File file, int x, int y) {
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(file);
+            spritesImages.add(img);
+            spritesImagesPosition.add(new Point(x,y));
+            spritesImagesPath.add(file.getAbsolutePath());
+            imagesCombo.addItem(file.getName());
+        } catch (IOException e) {
+        }
     }
 
     private JFrame window;
@@ -379,8 +390,10 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         if(this.getSelectedSprite() != null){
             int x = spriteCanvas.mouseX/zoom + spriteCanvas.cameraX;
             int y = spriteCanvas.mouseY/zoom + spriteCanvas.cameraY;
-            this.getSelectedSprite().frames.get(selectedFrame-1).center.x = x;
-            this.getSelectedSprite().frames.get(selectedFrame-1).center.y = y;
+            int xb = this.getSelectedSprite().frames.get(selectedFrame-1).box.x;
+            int yb = this.getSelectedSprite().frames.get(selectedFrame-1).box.y;
+            this.getSelectedSprite().frames.get(selectedFrame-1).center.x = x - xb;
+            this.getSelectedSprite().frames.get(selectedFrame-1).center.y = y - yb;
         }
         if(c == 'r')spriteCanvas.cameraX = spriteCanvas.cameraY = 0;
         if(c == 'z'){
