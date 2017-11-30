@@ -1,4 +1,3 @@
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -8,8 +7,9 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.JPanel;
 
-public class SpriteCanvas extends Canvas implements MouseMotionListener{
+public class SpriteCanvas extends JPanel implements MouseMotionListener{
     public final int outputSize = 1024;
 	private static final long serialVersionUID = -5593088216030819037L;
 	private BufferedImage gridImage;

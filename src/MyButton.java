@@ -10,5 +10,6 @@ public class MyButton extends JButton{
 
     public void doAction(){
         this.action.run();
+        SpriteHandler.instance.resetFocus();
     }
 }

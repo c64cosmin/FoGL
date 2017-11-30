@@ -346,6 +346,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
             button.doAction();
         }
 	    redrawAll();
+	    resetFocus();
 	}
 
 	private SpriteCanvas spriteCanvas = null;
@@ -365,6 +366,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
 	@Override
 	public void keyTyped(KeyEvent e) {
+	    if(e.getSource() == this.getSpriteNameArea())return;
 	    char c = e.getKeyChar();
 	    int move = 16;
 	    if(c == 'w')spriteCanvas.cameraY -= move;
@@ -420,6 +422,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 	public void itemStateChanged(ItemEvent e) {
 	    refreshCounter();
 	    redrawAll();
+	    resetFocus();
 	}
 
 	private void refreshCounter() {
@@ -436,4 +439,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         refreshCounter();
 		this.spriteCanvas.repaint();
 	}
+
+    public void resetFocus() {
+        this.spriteCanvas.requestFocus();
+    }
 }
