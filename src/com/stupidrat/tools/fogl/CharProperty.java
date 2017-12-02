@@ -1,3 +1,4 @@
+package com.stupidrat.tools.fogl;
 
 public class CharProperty {
     public CharProperty() {}

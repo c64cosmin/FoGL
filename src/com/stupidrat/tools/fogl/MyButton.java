@@ -1,3 +1,4 @@
+package com.stupidrat.tools.fogl;
 import javax.swing.JButton;
 
 public class MyButton extends JButton{

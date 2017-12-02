@@ -5,3 +5,5 @@ FoGL.jar
 convertor.exe
 *swp
 *~
+/target/
+.settings

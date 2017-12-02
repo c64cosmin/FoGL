@@ -1,3 +1,4 @@
+package com.stupidrat.tools.fogl;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 

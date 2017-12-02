@@ -1,3 +1,4 @@
+package com.stupidrat.tools.fogl;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Font;

@@ -1,3 +1,4 @@
+package com.stupidrat.tools.fogl;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;

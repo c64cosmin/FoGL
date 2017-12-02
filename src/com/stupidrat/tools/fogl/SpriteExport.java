@@ -1,3 +1,4 @@
+package com.stupidrat.tools.fogl;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
