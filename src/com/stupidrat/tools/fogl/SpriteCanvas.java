@@ -21,7 +21,7 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener {
     public SpriteCanvas() {
         this.setVisible(true);
         try {
-            gridImage = ImageIO.read(new File("grid.png"));
+            gridImage = ImageIO.read(new File("res/grid.png"));
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

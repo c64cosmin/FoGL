@@ -6,4 +6,6 @@ convertor.exe
 *swp
 *~
 /target/
+/output/
 .settings
+fogl.7z
