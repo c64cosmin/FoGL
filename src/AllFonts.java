@@ -16,138 +16,140 @@ import javax.swing.JTextArea;
 
 public class AllFonts implements ActionListener, KeyListener, ItemListener {
     public static AllFonts instance;
-	public AllFonts(){
-	    instance = this;
-		genButton = new JButton("Generate");
-		genButton.addActionListener(this);
 
-		fontStringComp = new JTextArea("`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?");
-		fontStringComp.addKeyListener(this);
+    public AllFonts() {
+        instance = this;
+        genButton = new JButton("Generate");
+        genButton.addActionListener(this);
 
-		fontSizeComp.addKeyListener(this);
-		texSizeXComp.addKeyListener(this);
-		texSizeYComp.addKeyListener(this);
+        fontStringComp = new JTextArea("`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?");
+        fontStringComp.addKeyListener(this);
 
-		allFontsComp = new JComboBox<String>();
-	    GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
-		fonts = e.getAllFonts(); // Get the fonts
-		for (Font f : fonts) {
-	    	allFontsComp.addItem(f.getFontName());
-	    }
-		allFontsComp.addItemListener(this);
-		selectedFont = fonts[0];
+        fontSizeComp.addKeyListener(this);
+        texSizeXComp.addKeyListener(this);
+        texSizeYComp.addKeyListener(this);
 
-		fontCanvas = new FontCanvas();
-		redrawAll();
-	}
+        allFontsComp = new JComboBox<String>();
+        GraphicsEnvironment e = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        fonts = e.getAllFonts(); // Get the fonts
+        for (Font f : fonts) {
+            allFontsComp.addItem(f.getFontName());
+        }
+        allFontsComp.addItemListener(this);
+        selectedFont = fonts[0];
 
-	private JFrame window;
-	public void setWindow(JFrame win){
-		this.window = win;
-	}
+        fontCanvas = new FontCanvas();
+        redrawAll();
+    }
 
-	private Font selectedFont;
-	private Font[] fonts;
-	private JComboBox<String> allFontsComp;
-	public JComboBox<String> getFonts(){
-		return allFontsComp;
-	}
+    private JFrame window;
 
-	public Font getFont(){
-		return selectedFont;
-	}
+    public void setWindow(JFrame win) {
+        this.window = win;
+    }
 
-	private JTextArea fontStringComp = null;
-	public JTextArea getFontsString(){
-		return fontStringComp;
-	}
+    private Font selectedFont;
+    private Font[] fonts;
+    private JComboBox<String> allFontsComp;
 
-	private JTextArea fontSizeComp = new JTextArea("10");
-	public JTextArea getFontsSize() {
-		return fontSizeComp;
-	}
+    public JComboBox<String> getFonts() {
+        return allFontsComp;
+    }
 
-	private JTextArea texSizeXComp = new JTextArea("512");
-	private JTextArea texSizeYComp = new JTextArea("512");
-	public JTextArea getTexSizeX() {
-		return texSizeXComp;
-	}
+    public Font getFont() {
+        return selectedFont;
+    }
 
-	public JTextArea getTexSizeY() {
-		return texSizeYComp;
-	}
+    private JTextArea fontStringComp = null;
 
-	private JButton genButton = null;
-	public JButton getGenButton(){
-		return genButton;
-	}
+    public JTextArea getFontsString() {
+        return fontStringComp;
+    }
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == genButton){
-			JFileChooser fileChooser = new JFileChooser();
-			if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-			  File file = fileChooser.getSelectedFile();
-			  String filename = file.getAbsolutePath();
-			  String filename_img = filename + ".png";
-			  String filename_map = filename + ".fntmap";
+    private JTextArea fontSizeComp = new JTextArea("10");
 
-			  fontCanvas.exportAllLetters(filename_img, filename_map);
-			}
-		}
-	}
+    public JTextArea getFontsSize() {
+        return fontSizeComp;
+    }
 
-	private FontCanvas fontCanvas = null;
-	public int texSizeX = 512;
-	public int texSizeY = 512;
-	private int fontSize = 10;
-	public FontCanvas getCanvas() {
-		return fontCanvas;
-	}
+    private JTextArea texSizeXComp = new JTextArea("512");
+    private JTextArea texSizeYComp = new JTextArea("512");
 
-	@Override
-	public void keyPressed(KeyEvent e) {
-		redrawAll();
-	}
+    public JTextArea getTexSizeX() {
+        return texSizeXComp;
+    }
 
-	@Override
-	public void keyReleased(KeyEvent e) {
-		try{
-			if(e.getSource() == texSizeXComp){
-				this.texSizeX = Integer.parseInt(texSizeXComp.getText());
-			}
-			if(e.getSource() == texSizeYComp){
-				this.texSizeY = Integer.parseInt(texSizeYComp.getText());
-			}
-			if(e.getSource() == fontSizeComp){
-				this.fontSize  = Integer.parseInt(fontSizeComp.getText());
-			}
-		}
-		catch(NumberFormatException ex){
+    public JTextArea getTexSizeY() {
+        return texSizeYComp;
+    }
 
-		}
-		redrawAll();
-	}
+    private JButton genButton = null;
 
-	@Override
-	public void keyTyped(KeyEvent e) {
-		redrawAll();
-	}
+    public JButton getGenButton() {
+        return genButton;
+    }
 
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		if(ItemEvent.SELECTED == e.getStateChange()){
-			selectedFont = fonts[allFontsComp.getSelectedIndex()];
-			redrawAll();
-		}
-	}
+    @Override public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == genButton) {
+            JFileChooser fileChooser = new JFileChooser();
+            if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                String filename = file.getAbsolutePath();
+                String filename_img = filename + ".png";
+                String filename_map = filename + ".fntmap";
 
-	public void redrawAll(){
-		this.fontCanvas.setText(fontStringComp.getText());
-		this.fontCanvas.setSize(this.texSizeX, this.texSizeY);
-		this.fontCanvas.setFontSize(this.fontSize);
-		this.fontCanvas.setFont(selectedFont);
-		this.fontCanvas.setText(fontStringComp.getText());
-		this.fontCanvas.repaint();
-	}
+                fontCanvas.exportAllLetters(filename_img, filename_map);
+            }
+        }
+    }
+
+    private FontCanvas fontCanvas = null;
+    public int texSizeX = 512;
+    public int texSizeY = 512;
+    private int fontSize = 10;
+
+    public FontCanvas getCanvas() {
+        return fontCanvas;
+    }
+
+    @Override public void keyPressed(KeyEvent e) {
+        redrawAll();
+    }
+
+    @Override public void keyReleased(KeyEvent e) {
+        try {
+            if (e.getSource() == texSizeXComp) {
+                this.texSizeX = Integer.parseInt(texSizeXComp.getText());
+            }
+            if (e.getSource() == texSizeYComp) {
+                this.texSizeY = Integer.parseInt(texSizeYComp.getText());
+            }
+            if (e.getSource() == fontSizeComp) {
+                this.fontSize = Integer.parseInt(fontSizeComp.getText());
+            }
+        } catch (NumberFormatException ex) {
+
+        }
+        redrawAll();
+    }
+
+    @Override public void keyTyped(KeyEvent e) {
+        redrawAll();
+    }
+
+    @Override public void itemStateChanged(ItemEvent e) {
+        if (ItemEvent.SELECTED == e.getStateChange()) {
+            selectedFont = fonts[allFontsComp.getSelectedIndex()];
+            redrawAll();
+        }
+    }
+
+    public void redrawAll() {
+        this.fontCanvas.setText(fontStringComp.getText());
+        this.fontCanvas.setSize(this.texSizeX, this.texSizeY);
+        this.fontCanvas.setFontSize(this.fontSize);
+        this.fontCanvas.setFont(selectedFont);
+        this.fontCanvas.setText(fontStringComp.getText());
+        this.fontCanvas.repaint();
+    }
 }
