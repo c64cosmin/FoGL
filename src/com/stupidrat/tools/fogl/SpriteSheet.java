@@ -68,19 +68,12 @@ public class SpriteSheet {
             }
 
             int noSprites = scan.nextInt();scan.nextLine();
-            System.out.println(noSprites);
             for(int i=0;i<noSprites;i++){
                 String line = scan.nextLine();
                 Sprite spr = Sprite.fromSerial(line);
                 h.sprites.add(spr);
                 h.getSpritesCombo().addItem(spr);
             }
-/*
-            out.write(h.sprites.size()+"\n");
-            for(int i=0;i<h.sprites.size();i++){
-                out.write(h.sprites.get(i).getSerial());
-            }
-            out.close();*/
             scan.close();
             in.close();
         } catch (IOException e) {

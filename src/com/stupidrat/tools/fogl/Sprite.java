@@ -52,7 +52,6 @@ public class Sprite {
             int h = scan.nextInt();
             int cx = scan.nextInt();
             int cy = scan.nextInt();
-            System.out.println(x+","+y+","+w+","+h+","+cx+","+cy);
             Frame frame = new Frame(new Rectangle(x,y,w,h), new Point(cx,cy));
             spr.frames.add(frame);
         }
