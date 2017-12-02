@@ -15,7 +15,9 @@ import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
 public class AllFonts implements ActionListener, KeyListener, ItemListener {
+    public static AllFonts instance;
 	public AllFonts(){
+	    instance = this;
 		genButton = new JButton("Generate");
 		genButton.addActionListener(this);
 
@@ -96,8 +98,8 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
 	}
 
 	private FontCanvas fontCanvas = null;
-	private int texSizeX = 512;
-	private int texSizeY = 512;
+	public int texSizeX = 512;
+	public int texSizeY = 512;
 	private int fontSize = 10;
 	public FontCanvas getCanvas() {
 		return fontCanvas;

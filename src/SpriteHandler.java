@@ -101,7 +101,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
                 if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
                   File file = fileChooser.getSelectedFile();
 
-                  //SpriteHandler.instance.addImage(file);
+                  SpriteExport.export(SpriteHandler.instance.getCanvas(), file.getAbsolutePath());
                 }
             }
         }));

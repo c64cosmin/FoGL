@@ -7,10 +7,6 @@ import javax.swing.JPanel;
 
 public class FoGL {
 	AllFonts fonts = null;
-	public static void main(String[] args){
-	    if(args.length == 0)new FoGL();
-	    if(args[0].equals("--sprite"))new SoGL();
-	}
 	public FoGL(){
 		JFrame win = new JFrame();
 		fonts = new AllFonts();

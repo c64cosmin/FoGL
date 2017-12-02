@@ -22,7 +22,6 @@ public class FontCanvas extends Canvas{
 	private Graphics graphics;
 
 	public FontCanvas(){
-		//this.setSize(512, 512);
 		this.setVisible(true);
 		fontSize = 10;
 		split = new LetterSplitter();
@@ -40,11 +39,13 @@ public class FontCanvas extends Canvas{
 	}
 
 	private void render(Graphics g, boolean grid){
+	    int w = AllFonts.instance.texSizeX;
+	    int h = AllFonts.instance.texSizeY;
 		((Graphics2D)g).setRenderingHint(
 		        RenderingHints.KEY_TEXT_ANTIALIASING,
 		        RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		g.fillRect(0, 0, w, h);
 		font = font.deriveFont((float)fontSize);
 		g.setFont(font);
 
@@ -72,7 +73,7 @@ public class FontCanvas extends Canvas{
 		for(int i=0;i<n;i++){
 			String c = str.substring(i, i+1);
 			CharProperty prop = split.getCharProperties(g, c);
-			if(x+prop.width >= this.getWidth()){
+			if(x+prop.width >= AllFonts.instance.texSizeX){
 				y += prop.height + 1;
 				x = 0;
 			}
@@ -82,27 +83,29 @@ public class FontCanvas extends Canvas{
 	}
 
 	public void exportAllLetters(String imageName, String mapName){
+	    int w = AllFonts.instance.texSizeX;
+	    int h = AllFonts.instance.texSizeY;
 		if(text.isEmpty())text = "`1234567890-=qwertyuiop[]\\asdfghjkl;'zxcvbnm,./~!@#$%^&*()_+QWERTYUIOP{}|ASDFGHJKL:\"ZXCVBNM<>?";
-		BufferedImage image = new BufferedImage(getWidth(), getHeight(),BufferedImage.TYPE_INT_RGB);
+		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 	    Graphics2D g = image.createGraphics();
 	    g.setRenderingHint(
 		        RenderingHints.KEY_TEXT_ANTIALIASING,
 		        RenderingHints.VALUE_TEXT_ANTIALIAS_GASP);
 		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, this.getWidth(), this.getHeight());
+		g.fillRect(0, 0, w, h);
 		font = font.deriveFont((float)fontSize);
 		g.setFont(font);
 
 		try {
 			PrintWriter mapOut = new PrintWriter(new File(mapName));
-			mapOut.println(this.getWidth() + " " + this.getHeight());
+			mapOut.println(w + " " + h);
 			int x = 0;
 			int y = 0;
 			int n = text.length();
 			for(int i=0;i<n;i++){
 				String c = text.substring(i, i+1);
 				CharProperty prop = split.getCharProperties(graphics, c);
-				if(x+prop.width >= this.getWidth()){
+				if(x+prop.width >= w){
 					y += prop.height + 1;
 					x = 0;
 				}
