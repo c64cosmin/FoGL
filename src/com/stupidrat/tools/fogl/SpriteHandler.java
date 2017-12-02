@@ -33,7 +33,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
         buttons = new ArrayList<MyButton>();
         buttons.add(new MyButton("+", new Runnable() {
-            @Override
             public void run() {
                 SpriteHandler.instance.zoomIn();
             }
@@ -41,7 +40,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         zoomInButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("-", new Runnable() {
-            @Override
             public void run() {
                 SpriteHandler.instance.zoomOut();
             }
@@ -49,7 +47,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         zoomOutButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Add image", new Runnable() {
-            @Override
             public void run() {
                 JFileChooser fileChooser = new JFileChooser();
                 if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
@@ -62,7 +59,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         addImageButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Del image", new Runnable() {
-            @Override
             public void run() {
                 int index = imagesCombo.getSelectedIndex();
                 SpriteHandler.instance.removeImage(index);
@@ -71,7 +67,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         delImageButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Open sheet", new Runnable() {
-            @Override
             public void run() {
                 JFileChooser fileChooser = new JFileChooser();
                 if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
@@ -84,7 +79,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         openImageButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Save sheet", new Runnable() {
-            @Override
             public void run() {
                 JFileChooser fileChooser = new JFileChooser();
                 if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
@@ -97,7 +91,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         saveImageButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Export sheet", new Runnable() {
-            @Override
             public void run() {
                 JFileChooser fileChooser = new JFileChooser();
                 if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
@@ -110,7 +103,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         exportImageButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Add sprite", new Runnable() {
-            @Override
             public void run() {
                 SpriteHandler.instance.addSprite(spriteName.getText());
             }
@@ -118,7 +110,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         addSpriteButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Del sprite", new Runnable() {
-            @Override
             public void run() {
                 int index = spritesCombo.getSelectedIndex();
                 SpriteHandler.instance.removeSprite(index);
@@ -127,7 +118,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         delSpriteButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton(">", new Runnable() {
-            @Override
             public void run() {
                 SpriteHandler.instance.selectedFrame++;
                 refreshCounter();
@@ -136,7 +126,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         rightSpriteButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("<", new Runnable() {
-            @Override
             public void run() {
                 SpriteHandler.instance.selectedFrame--;
                 refreshCounter();
@@ -145,7 +134,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         leftSpriteButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Add frame", new Runnable() {
-            @Override
             public void run() {
                 int w = 64;
                 int h = 64;
@@ -166,7 +154,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         addFrameButton = buttons.get(buttons.size() - 1);
 
         buttons.add(new MyButton("Del frame", new Runnable() {
-            @Override
             public void run() {
                 SpriteHandler.instance.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
             }
@@ -354,7 +341,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         return doublePanel;
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() instanceof MyButton) {
             MyButton button = (MyButton) e.getSource();
@@ -370,17 +356,14 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         return spriteCanvas;
     }
 
-    @Override
     public void keyPressed(KeyEvent e) {
         redrawAll();
     }
 
-    @Override
     public void keyReleased(KeyEvent e) {
         redrawAll();
     }
 
-    @Override
     public void keyTyped(KeyEvent e) {
         if (e.getSource() == this.getSpriteNameArea())
             return;
@@ -443,7 +426,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     public int selectedFrame;
     private int numberOfFrames;
 
-    @Override
     public void itemStateChanged(ItemEvent e) {
         refreshCounter();
         redrawAll();

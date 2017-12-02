@@ -66,7 +66,6 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener {
         }
     }
 
-    @Override
     public void mouseDragged(MouseEvent e) {
         // TODO Auto-generated method stub
 
@@ -75,7 +74,6 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener {
     public int mouseX;
     public int mouseY;
 
-    @Override
     public void mouseMoved(MouseEvent e) {
         this.mouseX = e.getX();
         this.mouseY = e.getY();

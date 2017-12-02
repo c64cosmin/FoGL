@@ -90,7 +90,6 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
         return genButton;
     }
 
-    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == genButton) {
             JFileChooser fileChooser = new JFileChooser();
@@ -114,12 +113,10 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
         return fontCanvas;
     }
 
-    @Override
     public void keyPressed(KeyEvent e) {
         redrawAll();
     }
 
-    @Override
     public void keyReleased(KeyEvent e) {
         try {
             if (e.getSource() == texSizeXComp) {
@@ -137,12 +134,10 @@ public class AllFonts implements ActionListener, KeyListener, ItemListener {
         redrawAll();
     }
 
-    @Override
     public void keyTyped(KeyEvent e) {
         redrawAll();
     }
 
-    @Override
     public void itemStateChanged(ItemEvent e) {
         if (ItemEvent.SELECTED == e.getStateChange()) {
             selectedFont = fonts[allFontsComp.getSelectedIndex()];
