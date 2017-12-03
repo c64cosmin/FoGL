@@ -51,7 +51,7 @@ int main(int argn, char** argv){
                 writeInt(cx, out);
                 writeInt(cy, out);
             }
-            while(fgetc(f)!='\n');
+            while(fgetc(f)!='\n' && !feof(f));
         }
 
         fclose(f);
