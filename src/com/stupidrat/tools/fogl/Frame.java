@@ -25,7 +25,8 @@ public class Frame {
         g.drawString("nm:"+spriteName, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+15);
         g.drawString("pos:"+x+","+y, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+30);
         g.drawString("dim:"+w+","+h, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+45);
-        if(index!=0)g.drawString("n:" + index, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+60);
+        g.drawString("cen:"+center.x+","+center.y, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+60);
+        if(index!=0)g.drawString("n:" + index, x*SpriteHandler.instance.zoom+2, y*SpriteHandler.instance.zoom+75);
 
     }
 

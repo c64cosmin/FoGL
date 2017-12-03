@@ -2,7 +2,7 @@
 .classpath
 .project
 FoGL.jar
-convertor.exe
+*exe
 *swp
 *~
 /target/

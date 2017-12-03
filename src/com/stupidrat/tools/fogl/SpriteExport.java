@@ -19,7 +19,10 @@ public class SpriteExport {
         g.setColor(new Color(0,0,0,0));
         g.fillRect(0, 0, sz, sz);
 
+        int zoom = SpriteHandler.instance.zoom;
+        SpriteHandler.instance.zoom = 1;
         canvas.render(g, false);
+        SpriteHandler.instance.zoom = zoom;
 
         try {
             FileOutputStream imageOut;
