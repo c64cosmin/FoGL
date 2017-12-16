@@ -11,7 +11,7 @@ mkdir output/res
 cp res/* output/res/.
 
 mkdir output/convertors
-gcc convertors/fogl_convertor.c -o output/convertors/fogl_convertor.exe
-gcc convertors/sogl_convertor.c -o output/convertors/sogl_convertor.exe
+gcc convertors/fogl_convertor.c -o output/convertors/fogl_convertor.exe -std=gnu11
+gcc convertors/sogl_convertor.c -o output/convertors/sogl_convertor.exe -std=gnu11
 
 7z a fogl.7z ./output/*

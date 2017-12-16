@@ -8,7 +8,11 @@ import java.util.Scanner;
 
 public class SpriteSheet {
     public static void saveSheet(String filename){
-        File f = new File(filename+".sheet");
+        String fullName = filename;
+        if(!fullName.endsWith(".sheet")){
+            fullName += ".sheet";
+        }
+        File f = new File(fullName);
         try {
             FileWriter out = new FileWriter(f);
             SpriteHandler h = SpriteHandler.instance;
@@ -22,7 +26,7 @@ public class SpriteSheet {
 
             out.write(h.sprites.size()+"\n");
             for(int i=0;i<h.sprites.size();i++){
-                out.write(h.sprites.get(i).getSerial());
+                out.write(h.sprites.get(i).getSerial()+"\n");
             }
             out.close();
         } catch (IOException e) {

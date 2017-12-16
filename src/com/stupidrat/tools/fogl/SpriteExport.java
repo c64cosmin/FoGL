@@ -37,7 +37,7 @@ public class SpriteExport {
             int noSprites = h.sprites.size();
             out.write(noSprites+"\n");
             for(int i=0;i<h.sprites.size();i++){
-                out.write(h.sprites.get(i).getSerial());
+                out.write(h.sprites.get(i).getSerial()+"\n");
             }
 
             out.close();
