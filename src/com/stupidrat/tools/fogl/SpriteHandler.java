@@ -1,4 +1,5 @@
 package com.stupidrat.tools.fogl;
+
 import java.awt.GridLayout;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -12,7 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -25,140 +25,172 @@ import javax.swing.SwingConstants;
 
 public class SpriteHandler implements ActionListener, KeyListener, ItemListener {
     public static SpriteHandler instance;
+
+    public ArrayList<Sprite> sprites;
+    public ArrayList<BufferedImage> spritesImages;
+    public ArrayList<Point> spritesImagesPosition;
+    public ArrayList<String> spritesImagesPath;
+    private JFrame window;
+    private SpriteCanvas spriteCanvas = null;
     public ArrayList<MyButton> buttons;
-    protected int zoom;
+    private JButton zoomInButton;
+    private JButton zoomOutButton;
+    private JButton addImageButton;
+    private JButton delImageButton;
+    private JButton openImageButton;
+    private JButton saveImageButton;
+    private JButton exportImageButton;
+    private JButton addSpriteButton;
+    private JButton delSpriteButton;
+    private JButton leftSpriteButton;
+    private JLabel middleSpriteButton;
+    private JButton rightSpriteButton;
+    private JButton addFrameButton;
+    private JButton delFrameButton;
+    private JComboBox<String> imagesCombo;
+    private JComboBox<Sprite> spritesCombo;
+    private JTextArea spriteName;
+
+    public int currentSprite;
+    public int selectedFrame;
+    public int numberOfFrames;
+    public int zoom;
+
+    public char isKeyPressed;
 
     public SpriteHandler() {
         SpriteHandler.instance = this;
 
-        buttons = new ArrayList<MyButton>();
-        buttons.add(new MyButton("+", new Runnable() {
-            public void run() {
-                SpriteHandler.instance.zoomIn();
-            }
-        }));
-        zoomInButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton("-", new Runnable() {
-            public void run() {
-                SpriteHandler.instance.zoomOut();
-            }
-        }));
-        zoomOutButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton("Add image", new Runnable() {
-            public void run() {
-                JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-
-                    SpriteHandler.instance.addImage(file);
+        {
+            buttons = new ArrayList<MyButton>();
+            buttons.add(new MyButton("+", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.zoomIn();
                 }
-            }
-        }));
-        addImageButton = buttons.get(buttons.size() - 1);
+            }));
+            zoomInButton = buttons.get(buttons.size() - 1);
 
-        buttons.add(new MyButton("Del image", new Runnable() {
-            public void run() {
-                int index = imagesCombo.getSelectedIndex();
-                SpriteHandler.instance.removeImage(index);
-            }
-        }));
-        delImageButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton("Open sheet", new Runnable() {
-            public void run() {
-                JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-
-                    SpriteSheet.openSheet(file.getAbsolutePath());
+            buttons.add(new MyButton("-", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.zoomOut();
                 }
-            }
-        }));
-        openImageButton = buttons.get(buttons.size() - 1);
+            }));
+            zoomOutButton = buttons.get(buttons.size() - 1);
 
-        buttons.add(new MyButton("Save sheet", new Runnable() {
-            public void run() {
-                JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
+            buttons.add(new MyButton("Add image", new Runnable() {
+                public void run() {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
 
-                    SpriteSheet.saveSheet(file.getAbsolutePath());
-                }
-            }
-        }));
-        saveImageButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton("Export sheet", new Runnable() {
-            public void run() {
-                JFileChooser fileChooser = new JFileChooser();
-                if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-                    File file = fileChooser.getSelectedFile();
-
-                    SpriteExport.export(SpriteHandler.instance.getCanvas(), file.getAbsolutePath());
-                }
-            }
-        }));
-        exportImageButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton("Add sprite", new Runnable() {
-            public void run() {
-                SpriteHandler.instance.addSprite(spriteName.getText());
-            }
-        }));
-        addSpriteButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton("Del sprite", new Runnable() {
-            public void run() {
-                int index = spritesCombo.getSelectedIndex();
-                SpriteHandler.instance.removeSprite(index);
-            }
-        }));
-        delSpriteButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton(">", new Runnable() {
-            public void run() {
-                SpriteHandler.instance.selectedFrame++;
-                refreshCounter();
-            }
-        }));
-        rightSpriteButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton("<", new Runnable() {
-            public void run() {
-                SpriteHandler.instance.selectedFrame--;
-                refreshCounter();
-            }
-        }));
-        leftSpriteButton = buttons.get(buttons.size() - 1);
-
-        buttons.add(new MyButton("Add frame", new Runnable() {
-            public void run() {
-                int w = 64;
-                int h = 64;
-                int cx = 32;
-                int cy = 32;
-                if (SpriteHandler.instance.getSelectedSprite() != null) {
-                    ArrayList<Frame> frames = SpriteHandler.instance.getSelectedSprite().frames;
-                    if (frames.size() > 0) {
-                        w = frames.get(frames.size() - 1).box.width;
-                        h = frames.get(frames.size() - 1).box.height;
-                        cx = frames.get(frames.size() - 1).center.x;
-                        cy = frames.get(frames.size() - 1).center.y;
+                        SpriteHandler.instance.addImage(file);
                     }
                 }
-                SpriteHandler.instance.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(cx, cy));
-            }
-        }));
-        addFrameButton = buttons.get(buttons.size() - 1);
+            }));
+            addImageButton = buttons.get(buttons.size() - 1);
 
-        buttons.add(new MyButton("Del frame", new Runnable() {
-            public void run() {
-                SpriteHandler.instance.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
-            }
-        }));
-        delFrameButton = buttons.get(buttons.size() - 1);
+            buttons.add(new MyButton("Del image", new Runnable() {
+                public void run() {
+                    int index = imagesCombo.getSelectedIndex();
+                    SpriteHandler.instance.removeImage(index);
+                }
+            }));
+            delImageButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton("Open sheet", new Runnable() {
+                public void run() {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
+
+                        SpriteSheet.openSheet(file.getAbsolutePath());
+                    }
+                }
+            }));
+            openImageButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton("Save sheet", new Runnable() {
+                public void run() {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
+
+                        SpriteSheet.saveSheet(file.getAbsolutePath());
+                    }
+                }
+            }));
+            saveImageButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton("Export sheet", new Runnable() {
+                public void run() {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
+
+                        SpriteExport.export(SpriteHandler.instance.getCanvas(), file.getAbsolutePath());
+                    }
+                }
+            }));
+            exportImageButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton("Add sprite", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.addSprite(spriteName.getText());
+                }
+            }));
+            addSpriteButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton("Del sprite", new Runnable() {
+                public void run() {
+                    int index = spritesCombo.getSelectedIndex();
+                    SpriteHandler.instance.removeSprite(index);
+                }
+            }));
+            delSpriteButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton(">", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.selectedFrame++;
+                    refreshCounter();
+                }
+            }));
+            rightSpriteButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton("<", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.selectedFrame--;
+                    refreshCounter();
+                }
+            }));
+            leftSpriteButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton("Add frame", new Runnable() {
+                public void run() {
+                    int w = 64;
+                    int h = 64;
+                    int cx = 32;
+                    int cy = 32;
+                    if (SpriteHandler.instance.getSelectedSprite() != null) {
+                        ArrayList<Frame> frames = SpriteHandler.instance.getSelectedSprite().frames;
+                        if (frames.size() > 0) {
+                            w = frames.get(frames.size() - 1).box.width;
+                            h = frames.get(frames.size() - 1).box.height;
+                            cx = frames.get(frames.size() - 1).center.x;
+                            cy = frames.get(frames.size() - 1).center.y;
+                        }
+                    }
+                    SpriteHandler.instance.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(cx, cy));
+                }
+            }));
+            addFrameButton = buttons.get(buttons.size() - 1);
+
+            buttons.add(new MyButton("Del frame", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
+                }
+            }));
+            delFrameButton = buttons.get(buttons.size() - 1);
+        }
 
         spritesCombo = new JComboBox<Sprite>();
         spritesCombo.addActionListener(this);
@@ -173,7 +205,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         middleSpriteButton.setHorizontalAlignment(SwingConstants.CENTER);
         middleSpriteButton.setVerticalAlignment(SwingConstants.CENTER);
 
-        spriteCanvas = new SpriteCanvas();
+        spriteCanvas = new SpriteCanvas(this);
 
         spritesImages = new ArrayList<BufferedImage>();
         spritesImagesPosition = new ArrayList<Point>();
@@ -185,6 +217,9 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         numberOfFrames = 0;
 
         zoom = 1;
+
+        isKeyPressed = ' ';
+
         for (JButton button : buttons) {
             button.addActionListener(this);
         }
@@ -212,8 +247,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         spritesCombo.removeItemAt(index);
     }
 
-    public ArrayList<Sprite> sprites;
-
     protected void addSprite(String name) {
         sprites.add(new Sprite(name));
         spritesCombo.addItem(sprites.get(sprites.size() - 1));
@@ -228,10 +261,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         }
     }
 
-    public ArrayList<BufferedImage> spritesImages;
-    public ArrayList<Point> spritesImagesPosition;
-    public ArrayList<String> spritesImagesPath;
-
     protected void addImage(File file) {
         addImage(file, 0, 0);
     }
@@ -244,17 +273,13 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
             spritesImagesPosition.add(new Point(x, y));
             spritesImagesPath.add(file.getAbsolutePath());
             imagesCombo.addItem(file.getName());
-        } catch (IOException e) {}
+        } catch (IOException e) {
+        }
     }
-
-    private JFrame window;
 
     public void setWindow(JFrame win) {
         this.window = win;
     }
-
-    private JButton zoomInButton;
-    private JButton zoomOutButton;
 
     public JPanel getZoomInOutButton() {
         JPanel doublePanel = new JPanel();
@@ -264,9 +289,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         return doublePanel;
     }
 
-    private JButton addImageButton;
-    private JButton delImageButton;
-
     public JPanel getAddImageButton() {
         JPanel doublePanel = new JPanel();
         doublePanel.setLayout(new GridLayout(1, 2));
@@ -274,10 +296,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         doublePanel.add(delImageButton);
         return doublePanel;
     }
-
-    private JButton openImageButton;
-    private JButton saveImageButton;
-    private JButton exportImageButton;
 
     public JPanel getImageButton() {
         JPanel doublePanel = new JPanel();
@@ -288,26 +306,17 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         return doublePanel;
     }
 
-    private JComboBox<String> imagesCombo;
-
     public JComboBox<String> getImagesCombo() {
         return imagesCombo;
     }
-
-    private JComboBox<Sprite> spritesCombo;
 
     public JComboBox<Sprite> getSpritesCombo() {
         return spritesCombo;
     }
 
-    private JTextArea spriteName;
-
     public JTextArea getSpriteNameArea() {
         return spriteName;
     }
-
-    private JButton addSpriteButton;
-    private JButton delSpriteButton;
 
     public JPanel getSpriteButton() {
         JPanel doublePanel = new JPanel();
@@ -317,10 +326,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         return doublePanel;
     }
 
-    private JButton leftSpriteButton;
-    private JLabel middleSpriteButton;
-    private JButton rightSpriteButton;
-
     public JPanel getSpriteIndicator() {
         JPanel doublePanel = new JPanel();
         doublePanel.setLayout(new GridLayout(1, 3));
@@ -329,9 +334,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         doublePanel.add(rightSpriteButton);
         return doublePanel;
     }
-
-    private JButton addFrameButton;
-    private JButton delFrameButton;
 
     public JPanel getFrameButton() {
         JPanel doublePanel = new JPanel();
@@ -350,17 +352,23 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         resetFocus();
     }
 
-    private SpriteCanvas spriteCanvas = null;
-
     public SpriteCanvas getCanvas() {
         return spriteCanvas;
     }
 
     public void keyPressed(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (c == 'q' || c == 'e' || c == 'c') {
+            isKeyPressed = c;
+        }
         redrawAll();
     }
 
     public void keyReleased(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (c == 'q' || c == 'e' || c == 'c') {
+            isKeyPressed = ' ';
+        }
         redrawAll();
     }
 
@@ -377,30 +385,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
             spriteCanvas.cameraX -= move;
         if (c == 'd')
             spriteCanvas.cameraX += move;
-        if (c == 'q') {
-            int x = spriteCanvas.mouseX / zoom + spriteCanvas.cameraX;
-            int y = spriteCanvas.mouseY / zoom + spriteCanvas.cameraY;
-            this.getSelectedSprite().frames.get(selectedFrame - 1).box.x = x;
-            this.getSelectedSprite().frames.get(selectedFrame - 1).box.y = y;
-        }
-        if (c == 'e')
-            if (this.getSelectedSprite() != null) {
-                int x = this.getSelectedSprite().frames.get(selectedFrame - 1).box.x;
-                int y = this.getSelectedSprite().frames.get(selectedFrame - 1).box.y;
-                int w = spriteCanvas.mouseX / zoom + spriteCanvas.cameraX;
-                int h = spriteCanvas.mouseY / zoom + spriteCanvas.cameraY;
-                this.getSelectedSprite().frames.get(selectedFrame - 1).box.width = w - x;
-                this.getSelectedSprite().frames.get(selectedFrame - 1).box.height = h - y;
-            }
-        if (c == 'c')
-            if (this.getSelectedSprite() != null) {
-                int x = spriteCanvas.mouseX / zoom + spriteCanvas.cameraX;
-                int y = spriteCanvas.mouseY / zoom + spriteCanvas.cameraY;
-                int xb = this.getSelectedSprite().frames.get(selectedFrame - 1).box.x;
-                int yb = this.getSelectedSprite().frames.get(selectedFrame - 1).box.y;
-                this.getSelectedSprite().frames.get(selectedFrame - 1).center.x = x - xb;
-                this.getSelectedSprite().frames.get(selectedFrame - 1).center.y = y - yb;
-            }
         if (c == 'r')
             spriteCanvas.cameraX = spriteCanvas.cameraY = 0;
         if (c == 'z') {
@@ -421,10 +405,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
             spriteCanvas.cameraY = -4;
         redrawAll();
     }
-
-    private int currentSprite;
-    public int selectedFrame;
-    private int numberOfFrames;
 
     public void itemStateChanged(ItemEvent e) {
         refreshCounter();
@@ -451,5 +431,39 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
     public void resetFocus() {
         this.spriteCanvas.requestFocus();
+    }
+
+    public void setFramePosition(int x, int y) {
+        if (this.getSelectedSprite() == null)
+            return;
+
+        x = x / zoom + spriteCanvas.cameraX;
+        y = y / zoom + spriteCanvas.cameraY;
+        this.getSelectedSprite().frames.get(selectedFrame - 1).box.x = x;
+        this.getSelectedSprite().frames.get(selectedFrame - 1).box.y = y;
+    }
+
+    public void setFrameSize(int newX, int newY) {
+        if (this.getSelectedSprite() == null)
+            return;
+
+        int x = this.getSelectedSprite().frames.get(selectedFrame - 1).box.x;
+        int y = this.getSelectedSprite().frames.get(selectedFrame - 1).box.y;
+        int w = newX / zoom + spriteCanvas.cameraX;
+        int h = newY / zoom + spriteCanvas.cameraY;
+        this.getSelectedSprite().frames.get(selectedFrame - 1).box.width = w - x;
+        this.getSelectedSprite().frames.get(selectedFrame - 1).box.height = h - y;
+    }
+
+    public void setFrameCenter(int x, int y) {
+        if (this.getSelectedSprite() == null)
+            return;
+
+        x = x / zoom + spriteCanvas.cameraX;
+        y = y / zoom + spriteCanvas.cameraY;
+        int xb = this.getSelectedSprite().frames.get(selectedFrame - 1).box.x;
+        int yb = this.getSelectedSprite().frames.get(selectedFrame - 1).box.y;
+        this.getSelectedSprite().frames.get(selectedFrame - 1).center.x = x - xb;
+        this.getSelectedSprite().frames.get(selectedFrame - 1).center.y = y - yb;
     }
 }

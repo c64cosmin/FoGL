@@ -38,7 +38,8 @@ public class SoGL {
         SpriteCanvas canvas = handler.getCanvas();
         canvas.setFocusable(true);
         canvas.addKeyListener(handler);
-        canvas.addMouseMotionListener(handler.getCanvas());
+        canvas.addMouseMotionListener(canvas);
+        canvas.addMouseListener(canvas);
 
         win.setVisible(true);
 
