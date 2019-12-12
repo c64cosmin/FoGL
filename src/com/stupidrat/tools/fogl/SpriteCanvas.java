@@ -15,16 +15,22 @@ import javax.swing.JPanel;
 public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseListener {
     public static final int outputSize = 1024;
     private static final long serialVersionUID = -5593088216030819037L;
+    private SpriteHandler handler;
     private BufferedImage gridImage;
     private Graphics graphics;
     public int cameraX;
     public int cameraY;
-    private SpriteHandler handler;
+    public int mouseX;
+    public int mouseY;
+    private boolean mouseInside;
     private boolean mouseOn;
 
-    public SpriteCanvas(SpriteHandler spriteHandler) {
+    private AnimationPreviewRenderer preview;
+
+    public SpriteCanvas(SpriteHandler handler) {
         this.setVisible(true);
-        this.handler = spriteHandler;
+        this.handler = handler;
+        this.preview = new AnimationPreviewRenderer(this, handler);
         try {
             gridImage = ImageIO.read(new File("res/grid.png"));
         } catch (IOException e) {
@@ -36,6 +42,7 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
 
     @Override
     public void update(Graphics g) {
+        this.preview.paint(g);
         paint(g);
     }
 
@@ -43,6 +50,7 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
     public void paint(Graphics g) {
         graphics = g;
         render(g, true);
+        this.preview.paint(g);
     }
 
     public void render(Graphics g, boolean grid) {
@@ -83,21 +91,24 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
 
     }
 
-    public int mouseX;
-    public int mouseY;
+    public void doMouseMove() {
+        if (!mouseInside)
+            return;
+
+        if (handler.isKeyPressed == 'q')
+            handler.setFramePosition(this.mouseX, this.mouseY);
+        if (handler.isKeyPressed == 'e')
+            handler.setFrameSize(this.mouseX, this.mouseY);
+        if (handler.isKeyPressed == 'c')
+            handler.setFrameCenter(this.mouseX, this.mouseY);
+        if (handler.isKeyPressed == 'p')
+            preview.setPosition(this.mouseX, this.mouseY);
+    }
 
     public void mouseMoved(MouseEvent e) {
         this.mouseX = e.getX();
         this.mouseY = e.getY();
-
-        int mouseX = e.getX();
-        int mouseY = e.getY();
-        if (handler.isKeyPressed == 'q')
-            handler.setFramePosition(mouseX, mouseY);
-        if (handler.isKeyPressed == 'e')
-            handler.setFrameSize(mouseX, mouseY);
-        if (handler.isKeyPressed == 'c')
-            handler.setFrameCenter(mouseX, mouseY);
+        doMouseMove();
     }
 
     @Override
@@ -107,21 +118,21 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        mouseInside = true;
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        mouseInside = false;
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
-        mouseOn = true;
+        this.mouseOn = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        mouseOn = false;
+        this.mouseOn = false;
     }
 }

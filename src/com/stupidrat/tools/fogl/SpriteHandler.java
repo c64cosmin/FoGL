@@ -358,15 +358,36 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
     public void keyPressed(KeyEvent e) {
         char c = e.getKeyChar();
-        if (c == 'q' || c == 'e' || c == 'c') {
+        if (c == 'q' || c == 'e' || c == 'c' || c == 'p') {
             isKeyPressed = c;
+            this.spriteCanvas.doMouseMove();
+        }
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_LEFT) {
+            Sprite sprite = this.getSelectedSprite();
+            if (sprite != null) {
+                this.selectedFrame--;
+                if (this.selectedFrame == 0) {
+                    this.selectedFrame = sprite.frames.size();
+                }
+            }
+        }
+        if (code == KeyEvent.VK_RIGHT) {
+            Sprite sprite = this.getSelectedSprite();
+            if (sprite != null) {
+                this.selectedFrame++;
+                if (this.selectedFrame > sprite.getNumberOfFrames()) {
+
+                    this.selectedFrame = 1;
+                }
+            }
         }
         redrawAll();
     }
 
     public void keyReleased(KeyEvent e) {
         char c = e.getKeyChar();
-        if (c == 'q' || c == 'e' || c == 'c') {
+        if (c == 'q' || c == 'e' || c == 'c' || c == 'p') {
             isKeyPressed = ' ';
         }
         redrawAll();
