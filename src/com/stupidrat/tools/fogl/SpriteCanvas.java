@@ -11,8 +11,9 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputListener;
 
-public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseListener {
+public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseListener, MouseInputListener {
     public static final int outputSize = 1024;
     private static final long serialVersionUID = -5593088216030819037L;
     private SpriteHandler handler;
@@ -111,27 +112,22 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
         doMouseMove();
     }
 
-    @Override
     public void mouseClicked(MouseEvent e) {
 
     }
 
-    @Override
     public void mouseEntered(MouseEvent e) {
         mouseInside = true;
     }
 
-    @Override
     public void mouseExited(MouseEvent e) {
         mouseInside = false;
     }
 
-    @Override
     public void mousePressed(MouseEvent e) {
         this.mouseOn = true;
     }
 
-    @Override
     public void mouseReleased(MouseEvent e) {
         this.mouseOn = false;
     }

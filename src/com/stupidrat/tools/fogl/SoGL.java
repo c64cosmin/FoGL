@@ -12,18 +12,24 @@ public class SoGL {
         JFrame win = new JFrame();
         handler.setWindow(win);
 
-        //left side
+        //tool side
+        JPanel toolPanel = new JPanel();
+        toolPanel.setLayout(new GridLayout(6,1));
+        toolPanel.add(handler.getZoomInOutButton());
+        toolPanel.add(handler.getAddImageButton());
+        toolPanel.add(handler.getImagesCombo());
+        toolPanel.add(handler.getImageButton());
+        toolPanel.add(handler.getSpriteIndicator());
+        toolPanel.add(handler.getFrameButton());
+
+        //loop side
+        LoopPanel loopPanel = new LoopPanel();
+
+        //componded panel
         JPanel leftPanel = new JPanel();
-        leftPanel.setLayout(new GridLayout(9,1));
-        leftPanel.add(handler.getZoomInOutButton());
-        leftPanel.add(handler.getAddImageButton());
-        leftPanel.add(handler.getImagesCombo());
-        leftPanel.add(handler.getImageButton());
-        leftPanel.add(handler.getSpriteNameArea());
-        leftPanel.add(handler.getSpriteButton());
-        leftPanel.add(handler.getSpritesCombo());
-        leftPanel.add(handler.getSpriteIndicator());
-        leftPanel.add(handler.getFrameButton());
+        leftPanel.setLayout(new GridLayout(1,2));
+        leftPanel.add(loopPanel.getJPanel());
+        leftPanel.add(toolPanel);
 
         //window panel
         JPanel mainPanel = new JPanel();
