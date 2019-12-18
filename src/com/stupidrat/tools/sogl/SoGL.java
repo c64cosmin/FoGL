@@ -23,7 +23,7 @@ public class SoGL {
         toolPanel.add(handler.getFrameButton());
 
         //loop side
-        LoopPanel loopPanel = new LoopPanel();
+        LoopPanel loopPanel = new LoopPanel(handler);
 
         //componded panel
         JPanel leftPanel = new JPanel();

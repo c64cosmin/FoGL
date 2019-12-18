@@ -26,10 +26,6 @@ public class Sprite {
         frames.add(new Frame(box, center));
     }
 
-    public int getNumberOfFrames() {
-        return frames.size();
-    }
-
     public void delFrame(int selectedFrame) {
         frames.remove(selectedFrame);
     }

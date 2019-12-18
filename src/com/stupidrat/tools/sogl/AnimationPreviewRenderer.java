@@ -24,7 +24,7 @@ public class AnimationPreviewRenderer {
         int py = 0;
         int cx = 0;
         int cy = 0;
-        Sprite sprite = handler.getSelectedSprite();
+		Sprite sprite = handler.sprites.getSelectedSprite();;
         if (sprite != null) {
             Frame frame = null;
             int i = handler.selectedFrame - 1;

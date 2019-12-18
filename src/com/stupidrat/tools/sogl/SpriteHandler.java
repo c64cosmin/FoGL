@@ -26,7 +26,6 @@ import javax.swing.SwingConstants;
 public class SpriteHandler implements ActionListener, KeyListener, ItemListener {
     public static SpriteHandler instance;
 
-    public ArrayList<Sprite> sprites;
     public ArrayList<BufferedImage> spritesImages;
     public ArrayList<Point> spritesImagesPosition;
     public ArrayList<String> spritesImagesPath;
@@ -48,10 +47,10 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     private JButton addFrameButton;
     private JButton delFrameButton;
     private JComboBox<String> imagesCombo;
-    private JComboBox<Sprite> spritesCombo;
     private JTextArea spriteName;
+    
+    public SpriteAnimationListArea sprites;
 
-    public int currentSprite;
     public int selectedFrame;
     public int numberOfFrames;
     public int zoom;
@@ -133,21 +132,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
             }));
             exportImageButton = buttons.get(buttons.size() - 1);
 
-            buttons.add(new MyButton("Add sprite", new Runnable() {
-                public void run() {
-                    SpriteHandler.instance.addSprite(spriteName.getText());
-                }
-            }));
-            addSpriteButton = buttons.get(buttons.size() - 1);
-
-            buttons.add(new MyButton("Del sprite", new Runnable() {
-                public void run() {
-                    int index = spritesCombo.getSelectedIndex();
-                    SpriteHandler.instance.removeSprite(index);
-                }
-            }));
-            delSpriteButton = buttons.get(buttons.size() - 1);
-
             buttons.add(new MyButton(">", new Runnable() {
                 public void run() {
                     SpriteHandler.instance.selectedFrame++;
@@ -170,8 +154,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
                     int h = 64;
                     int cx = 32;
                     int cy = 32;
-                    if (SpriteHandler.instance.getSelectedSprite() != null) {
-                        ArrayList<Frame> frames = SpriteHandler.instance.getSelectedSprite().frames;
+                    if (SpriteHandler.instance.sprites.getSelectedSprite() != null) {
+                        ArrayList<Frame> frames = SpriteHandler.instance.sprites.getSelectedSprite().frames;
                         if (frames.size() > 0) {
                             w = frames.get(frames.size() - 1).box.width;
                             h = frames.get(frames.size() - 1).box.height;
@@ -179,21 +163,18 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
                             cy = frames.get(frames.size() - 1).center.y;
                         }
                     }
-                    SpriteHandler.instance.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(cx, cy));
+                    SpriteHandler.instance.sprites.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(cx, cy));
                 }
             }));
             addFrameButton = buttons.get(buttons.size() - 1);
 
             buttons.add(new MyButton("Del frame", new Runnable() {
                 public void run() {
-                    SpriteHandler.instance.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
+                    SpriteHandler.instance.sprites.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
                 }
             }));
             delFrameButton = buttons.get(buttons.size() - 1);
         }
-
-        spritesCombo = new JComboBox<Sprite>();
-        spritesCombo.addActionListener(this);
 
         imagesCombo = new JComboBox<String>();
         imagesCombo.addActionListener(this);
@@ -210,9 +191,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         spritesImages = new ArrayList<BufferedImage>();
         spritesImagesPosition = new ArrayList<Point>();
         spritesImagesPath = new ArrayList<String>();
-        sprites = new ArrayList<Sprite>();
 
-        currentSprite = 0;
         selectedFrame = 0;
         numberOfFrames = 0;
 
@@ -233,24 +212,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     protected void zoomOut() {
         if (SpriteHandler.instance.zoom > 1)
             SpriteHandler.instance.zoom >>= 1;
-    }
-
-    protected Sprite getSelectedSprite() {
-        refreshCounter();
-        if (this.currentSprite != -1 && this.currentSprite < this.sprites.size())
-            return this.sprites.get(currentSprite);
-        return null;
-    }
-
-    protected void removeSprite(int index) {
-        sprites.remove(index);
-        spritesCombo.removeItemAt(index);
-    }
-
-    protected void addSprite(String name) {
-        sprites.add(new Sprite(name));
-        spritesCombo.addItem(sprites.get(sprites.size() - 1));
-        spritesCombo.setSelectedIndex(sprites.size() - 1);
     }
 
     protected void removeImage(int index) {
@@ -310,10 +271,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         return imagesCombo;
     }
 
-    public JComboBox<Sprite> getSpritesCombo() {
-        return spritesCombo;
-    }
-
     public JTextArea getSpriteNameArea() {
         return spriteName;
     }
@@ -364,7 +321,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         }
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_LEFT) {
-            Sprite sprite = this.getSelectedSprite();
+            Sprite sprite = this.sprites.getSelectedSprite();
             if (sprite != null) {
                 this.selectedFrame--;
                 if (this.selectedFrame == 0) {
@@ -373,10 +330,10 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
             }
         }
         if (code == KeyEvent.VK_RIGHT) {
-            Sprite sprite = this.getSelectedSprite();
+            Sprite sprite = this.sprites.getSelectedSprite();
             if (sprite != null) {
                 this.selectedFrame++;
-                if (this.selectedFrame > sprite.getNumberOfFrames()) {
+                if (this.selectedFrame > sprite.frames.size()) {
 
                     this.selectedFrame = 1;
                 }
@@ -434,9 +391,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     }
 
     private void refreshCounter() {
-        this.currentSprite = this.spritesCombo.getSelectedIndex();
-        if (this.currentSprite != -1 && this.currentSprite < this.sprites.size()) {
-            this.numberOfFrames = sprites.get(this.currentSprite).getNumberOfFrames();
+    	if(this.sprites != null && this.sprites.getSelectedSprite() != null) {
+            this.numberOfFrames = this.sprites.getSelectedSprite().frames.size();
             if (this.selectedFrame > this.numberOfFrames)
                 this.selectedFrame = this.numberOfFrames;
             if (this.selectedFrame <= 0)
@@ -448,43 +404,49 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     public void redrawAll() {
         refreshCounter();
         this.spriteCanvas.repaint();
+        if(this.sprites != null)
+        	this.sprites.repaint();
     }
 
     public void resetFocus() {
-        this.spriteCanvas.requestFocus();
+        this.spriteCanvas.grabFocus();
     }
 
     public void setFramePosition(int x, int y) {
-        if (this.getSelectedSprite() == null)
-            return;
-
-        x = x / zoom + spriteCanvas.cameraX;
-        y = y / zoom + spriteCanvas.cameraY;
-        this.getSelectedSprite().frames.get(selectedFrame - 1).box.x = x;
-        this.getSelectedSprite().frames.get(selectedFrame - 1).box.y = y;
+    	Sprite spr = sprites.getSelectedSprite();
+        if (spr != null) {
+	        x = x / zoom + spriteCanvas.cameraX;
+	        y = y / zoom + spriteCanvas.cameraY;
+	        spr.frames.get(selectedFrame - 1).box.x = x;
+	        spr.frames.get(selectedFrame - 1).box.y = y;
+        }
     }
 
     public void setFrameSize(int newX, int newY) {
-        if (this.getSelectedSprite() == null)
-            return;
-
-        int x = this.getSelectedSprite().frames.get(selectedFrame - 1).box.x;
-        int y = this.getSelectedSprite().frames.get(selectedFrame - 1).box.y;
-        int w = newX / zoom + spriteCanvas.cameraX;
-        int h = newY / zoom + spriteCanvas.cameraY;
-        this.getSelectedSprite().frames.get(selectedFrame - 1).box.width = w - x;
-        this.getSelectedSprite().frames.get(selectedFrame - 1).box.height = h - y;
+    	Sprite spr = sprites.getSelectedSprite();
+        if (spr != null) {
+	        int x = spr.frames.get(selectedFrame - 1).box.x;
+	        int y = spr.frames.get(selectedFrame - 1).box.y;
+	        int w = newX / zoom + spriteCanvas.cameraX;
+	        int h = newY / zoom + spriteCanvas.cameraY;
+	        spr.frames.get(selectedFrame - 1).box.width = w - x;
+	        spr.frames.get(selectedFrame - 1).box.height = h - y;
+        }
     }
 
     public void setFrameCenter(int x, int y) {
-        if (this.getSelectedSprite() == null)
-            return;
-
-        x = x / zoom + spriteCanvas.cameraX;
-        y = y / zoom + spriteCanvas.cameraY;
-        int xb = this.getSelectedSprite().frames.get(selectedFrame - 1).box.x;
-        int yb = this.getSelectedSprite().frames.get(selectedFrame - 1).box.y;
-        this.getSelectedSprite().frames.get(selectedFrame - 1).center.x = x - xb;
-        this.getSelectedSprite().frames.get(selectedFrame - 1).center.y = y - yb;
+    	Sprite spr = sprites.getSelectedSprite();
+        if (spr != null) {
+	        x = x / zoom + spriteCanvas.cameraX;
+	        y = y / zoom + spriteCanvas.cameraY;
+	        int xb = spr.frames.get(selectedFrame - 1).box.x;
+	        int yb = spr.frames.get(selectedFrame - 1).box.y;
+	        spr.frames.get(selectedFrame - 1).center.x = x - xb;
+	        spr.frames.get(selectedFrame - 1).center.y = y - yb;
+        }
     }
+
+	public void setAnimationListArea(SpriteAnimationListArea listArea) {
+		sprites = listArea;
+	}
 }

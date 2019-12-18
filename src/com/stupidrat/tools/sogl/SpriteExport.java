@@ -34,10 +34,10 @@ public class SpriteExport {
 
             FileWriter out = new FileWriter(new File(filename + ".sprmap"));
 
-            int noSprites = h.sprites.size();
+            int noSprites = h.sprites.entries.size();
             out.write(noSprites+"\n");
-            for(int i=0;i<h.sprites.size();i++){
-                out.write(h.sprites.get(i).getSerial()+"\n");
+            for(int i=0;i<h.sprites.entries.size();i++){
+                out.write(h.sprites.entries.get(i).getSerial()+"\n");
             }
 
             out.close();

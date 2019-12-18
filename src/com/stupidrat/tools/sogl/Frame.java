@@ -12,7 +12,12 @@ public class Frame {
         this.center = center;
     }
 
-    public void drawFrameDecorator(Graphics g, String spriteName, int cameraX, int cameraY, int zoom, int index) {
+    public Frame(Frame frame) {
+		this.box = (Rectangle) frame.box.clone();
+		this.center = (Point) frame.center.clone();
+	}
+
+	public void drawFrameDecorator(Graphics g, String spriteName, int cameraX, int cameraY, int zoom, int index) {
         int x = (int) (box.getX()-cameraX);
         int y = (int) (box.getY()-cameraY);
         int w = (int) box.getWidth();

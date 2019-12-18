@@ -2,24 +2,31 @@ package com.stupidrat.tools.sogl;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.TextArea;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 public class SpriteAnimationListArea extends JPanel implements MouseListener {
 	private int rowWidth = 15;
 	
 	public ArrayList<Sprite> entries;
+	private int selected;
 
-	public SpriteAnimationListArea() {
-		this.setVisible(true);
+	private SpriteHandler handler;	
+	private JTextArea textArea;
+
+	public SpriteAnimationListArea(SpriteHandler parent, JTextArea textArea) {
+		this.handler = parent;
+		this.handler.setAnimationListArea(this);
+		this.textArea = textArea;
 		
 		entries = new ArrayList<Sprite>();
-	}
-	
+	}	
 
     @Override
     public void update(Graphics g) {
@@ -32,8 +39,11 @@ public class SpriteAnimationListArea extends JPanel implements MouseListener {
     	g.fillRect(0, 0, this.getWidth(), this.getHeight());
     	
     	int y=rowWidth*2;
-    	g.setColor(Color.BLUE);
     	for(Sprite entry : entries) {
+        	g.setColor(Color.BLUE);
+        	if(entry == this.getSelectedSprite())
+        		g.setColor(Color.RED);
+        	
     		g.drawString(entry.getName(), 0, y);
         	y+=rowWidth;
     	}
@@ -59,8 +69,21 @@ public class SpriteAnimationListArea extends JPanel implements MouseListener {
 
 
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
+		System.out.println(e.getY());
+		int y = (e.getY()-5) / rowWidth - 2;
 		
+		this.selected = -1;
+		if(y >= 0) {
+			this.selected = y;
+		}
+		
+		Sprite selected = getSelectedSprite();
+		textArea.setText("none");
+		if(selected != null) {
+			textArea.setText(selected.getName());
+		}
+		
+		handler.redrawAll();
 	}
 
 
@@ -69,13 +92,12 @@ public class SpriteAnimationListArea extends JPanel implements MouseListener {
 		
 	}
 
-	public void addNewEntry(String text) {
-		Sprite entry = new Sprite(text);
-		entries.add(entry);
+	public void addNewEntry(Sprite newSprite) {
+		entries.add(newSprite);
 		
 		sort();
 		
-		this.repaint();
+		handler.redrawAll();
 	}
 
 	private void sort() {
@@ -89,5 +111,11 @@ public class SpriteAnimationListArea extends JPanel implements MouseListener {
 				entries.set(i, entry);
 			}
 		}
+	}
+
+	public Sprite getSelectedSprite() {
+		if(selected != -1 && selected < entries.size())
+			return entries.get(selected);
+		return null;
 	}
 }

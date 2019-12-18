@@ -25,8 +25,8 @@ public class SpriteSheet {
             }
 
             out.write(h.sprites.size()+"\n");
-            for(int i=0;i<h.sprites.size();i++){
-                out.write(h.sprites.get(i).getSerial()+"\n");
+            for(int i=0;i<h.sprites.entries.size();i++){
+                out.write(h.sprites.entries.get(i).getSerial()+"\n");
             }
             out.close();
         } catch (IOException e) {
@@ -43,11 +43,9 @@ public class SpriteSheet {
             FileReader in = new FileReader(f);
             Scanner scan = new Scanner(in);
 
-            h.sprites.clear();
             h.spritesImages.clear();
             h.spritesImagesPosition.clear();
-            h.getImagesCombo().removeAllItems();
-            h.getSpritesCombo().removeAllItems();
+            h.sprites.entries.clear();
 
             int noImages = scan.nextInt();scan.nextLine();
             for(int i=0;i<noImages;i++){
@@ -75,11 +73,12 @@ public class SpriteSheet {
             for(int i=0;i<noSprites;i++){
                 String line = scan.nextLine();
                 Sprite spr = Sprite.fromSerial(line);
-                h.sprites.add(spr);
-                h.getSpritesCombo().addItem(spr);
+                h.sprites.entries.add(spr);
             }
             scan.close();
             in.close();
+            
+            h.redrawAll();
         } catch (IOException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
