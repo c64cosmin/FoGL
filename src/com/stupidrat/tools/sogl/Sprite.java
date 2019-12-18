@@ -1,8 +1,10 @@
-package com.stupidrat.tools.fogl;
+package com.stupidrat.tools.sogl;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import com.stupidrat.tools.fogl.Frame;
 
 public class Sprite {
     public ArrayList<Frame> frames;

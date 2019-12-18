@@ -1,7 +1,9 @@
-package com.stupidrat.tools.fogl;
+package com.stupidrat.tools.sogl;
 
 import java.awt.Graphics;
 import java.awt.Image;
+
+import com.stupidrat.tools.fogl.Frame;
 
 public class AnimationPreviewRenderer {
     private SpriteHandler handler;

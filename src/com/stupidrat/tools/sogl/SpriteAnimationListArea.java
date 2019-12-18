@@ -1,4 +1,4 @@
-package com.stupidrat.tools.fogl;
+package com.stupidrat.tools.sogl;
 
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;

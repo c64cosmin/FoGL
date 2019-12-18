@@ -1,4 +1,5 @@
-package com.stupidrat.tools.fogl;
+package com.stupidrat.tools.sogl;
+
 public class SoGLMain {
     public static void main(String[] args){
         new SoGL();

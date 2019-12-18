@@ -1,4 +1,4 @@
-package com.stupidrat.tools.fogl;
+package com.stupidrat.tools.sogl;
 
 import java.awt.GridLayout;
 import java.awt.Point;
@@ -22,6 +22,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
+
+import com.stupidrat.tools.fogl.Frame;
 
 public class SpriteHandler implements ActionListener, KeyListener, ItemListener {
     public static SpriteHandler instance;

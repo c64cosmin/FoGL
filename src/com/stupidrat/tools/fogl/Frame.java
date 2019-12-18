@@ -3,6 +3,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
 
+import com.stupidrat.tools.sogl.SpriteHandler;
+
 public class Frame {
     public Rectangle box;
     public Point center;
