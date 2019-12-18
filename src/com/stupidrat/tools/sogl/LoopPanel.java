@@ -31,8 +31,11 @@ public class LoopPanel implements KeyListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		
+		if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+			e.consume();
+			listArea.addNewEntry(textArea.getText());
+			textArea.setText(textArea.getText());
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {

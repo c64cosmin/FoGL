@@ -78,11 +78,11 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
                     && SpriteHandler.instance.getSelectedSprite().frames.size() > 0) {
                 String spriteName = SpriteHandler.instance.getSelectedSprite().getName();
                 for (int i = 0; i < SpriteHandler.instance.getSelectedSprite().frames.size(); i++) {
-                    SpriteHandler.instance.getSelectedSprite().frames.get(i).draw(g, spriteName, cameraX, cameraY,
+                    SpriteHandler.instance.getSelectedSprite().frames.get(i).drawFrameDecorator(g, spriteName, cameraX, cameraY,
                             SpriteHandler.instance.zoom, i + 1);
                 }
                 g.setColor(Color.RED);
-                SpriteHandler.instance.getSelectedSprite().frames.get(SpriteHandler.instance.selectedFrame - 1).draw(g,
+                SpriteHandler.instance.getSelectedSprite().frames.get(SpriteHandler.instance.selectedFrame - 1).drawFrameDecorator(g,
                         spriteName, cameraX, cameraY, SpriteHandler.instance.zoom, 0);
             }
         }

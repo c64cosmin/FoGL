@@ -12,7 +12,7 @@ public class Frame {
         this.center = center;
     }
 
-    public void draw(Graphics g, String spriteName, int cameraX, int cameraY, int zoom, int index) {
+    public void drawFrameDecorator(Graphics g, String spriteName, int cameraX, int cameraY, int zoom, int index) {
         int x = (int) (box.getX()-cameraX);
         int y = (int) (box.getY()-cameraY);
         int w = (int) box.getWidth();
