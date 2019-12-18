@@ -23,8 +23,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
-import com.stupidrat.tools.fogl.Frame;
-
 public class SpriteHandler implements ActionListener, KeyListener, ItemListener {
     public static SpriteHandler instance;
 

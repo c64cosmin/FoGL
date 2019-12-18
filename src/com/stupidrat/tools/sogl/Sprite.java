@@ -4,8 +4,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import com.stupidrat.tools.fogl.Frame;
-
 public class Sprite {
     public ArrayList<Frame> frames;
     private String name;

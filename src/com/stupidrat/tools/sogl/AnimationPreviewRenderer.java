@@ -3,8 +3,6 @@ package com.stupidrat.tools.sogl;
 import java.awt.Graphics;
 import java.awt.Image;
 
-import com.stupidrat.tools.fogl.Frame;
-
 public class AnimationPreviewRenderer {
     private SpriteHandler handler;
     private SpriteCanvas canvas;
