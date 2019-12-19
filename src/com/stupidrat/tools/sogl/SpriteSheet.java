@@ -24,7 +24,7 @@ public class SpriteSheet {
                 out.write(spriteString + "\n");
             }
 
-            out.write(h.sprites.size()+"\n");
+            out.write(h.sprites.entries.size()+"\n");
             for(int i=0;i<h.sprites.entries.size();i++){
                 out.write(h.sprites.entries.get(i).getSerial()+"\n");
             }
