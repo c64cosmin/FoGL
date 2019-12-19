@@ -22,7 +22,15 @@ public class Sprite {
         frames = new ArrayList<Frame>();
     }
 
-    public void addFrame(Rectangle box, Point center){
+    public Sprite(Sprite sprite) {
+    	this.name = sprite.name;
+        frames = new ArrayList<Frame>();
+        for(Frame frame : sprite.frames) {
+        	frames.add(new Frame(frame));
+        }
+	}
+
+	public void addFrame(Rectangle box, Point center){
         frames.add(new Frame(box, center));
     }
 

@@ -12,25 +12,30 @@ import javax.imageio.ImageIO;
 
 public class SpriteExport {
 
-    private static String extension = ".sprmap";
+    private static String extension = ".sheet";
+    private static String modifier = ".packed";
 	private static String imageExtension = ".png";
-	private static int exportSize = 256;
+	private static int exportSize = 1024;
 
 	public static void export(SpriteCanvas canvas, String filename) {
         if(filename.endsWith(extension)){
         	filename = filename.substring(0, filename.length() - extension.length());
         }
-        if(filename.endsWith(imageExtension )){
+        if(filename.endsWith(imageExtension)){
         	filename = filename.substring(0, filename.length() - imageExtension.length());
         }
-        
+        if(filename.endsWith(modifier)){
+        	filename = filename.substring(0, filename.length() - modifier.length());
+        }
+      
         int sz = exportSize ;
         BufferedImage image = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
         g.setColor(new Color(0,0,0,0));
         g.fillRect(0, 0, sz, sz);
 
-        canvas.render(g, false, 0, 0, 1);
+        SpritePacker packer = new SpritePacker(SpriteHandler.instance.sprites.entries, exportSize);
+        packer.draw(g);
 
         try {
             FileOutputStream imageOut;

@@ -18,19 +18,29 @@ public class AnimationPreviewRenderer {
         this.canvas = canvas;
         x = y = 0;
     }
-
-    public void paint(Graphics g) {
-        int s = handler.zoom;
+    
+    public void paint(Graphics g, Frame oldFrame, Frame newFrame) {
+    	if (image != null) {
+            g.drawImage(image,
+	        		    newFrame.box.x, newFrame.box.y,
+	        		    newFrame.box.x + newFrame.box.width, newFrame.box.y + newFrame.box.height,
+	        		    oldFrame.box.x, oldFrame.box.y,
+	        		    oldFrame.box.x + oldFrame.box.width, oldFrame.box.y + oldFrame.box.height,
+	        		    null);
+        }
+    }
+    
+    public void paint(Graphics g, int offx, int offy, int zoom, Sprite sprite, int frameIndex) {
+    	int s = zoom;
         int w = 0;
         int h = 0;
         int px = 0;
         int py = 0;
         int cx = 0;
         int cy = 0;
-		Sprite sprite = handler.sprites.getSelectedSprite();;
         if (sprite != null) {
             Frame frame = null;
-            int i = handler.selectedFrame - 1;
+            int i = frameIndex;
             if (i < sprite.frames.size()) {
                 frame = sprite.frames.get(i);
                 w = frame.box.width;
@@ -42,11 +52,19 @@ public class AnimationPreviewRenderer {
             }
             if (frame != null) {
                 if (image != null) {
-                    g.drawImage(image, x - cx * s, y - cy * s, x + (w - cx) * s, y + (h - cy) * s, px, py, px + w, py + h,
-                            null);
+                    g.drawImage(image,
+                    		    offx - cx * s, offy - cy * s,
+                    		    offx + (w - cx) * s, offy + (h - cy) * s,
+                    		    px, py,
+                    		    px + w, py + h,
+                                null);
                 }
             }
         }
+    }
+
+    public void paint(Graphics g) {
+    	paint(g, x, y, handler.zoom, handler.sprites.getSelectedSprite(), handler.selectedFrame - 1);
     }
     
     public void refreshImage() {

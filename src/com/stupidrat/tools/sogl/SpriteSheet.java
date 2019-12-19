@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class SpriteSheet {
-    public static void saveSheet(String filename){
+    public void saveSheet(String filename){
         String fullName = filename;
         if(!fullName.endsWith(".sheet")){
             fullName += ".sheet";
@@ -35,7 +35,7 @@ public class SpriteSheet {
         }
     }
 
-    public static void openSheet(String filename) {
+    public void openSheet(String filename) {
         File f = new File(filename);
         try {
             SpriteHandler h = SpriteHandler.instance;
