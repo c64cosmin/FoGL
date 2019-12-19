@@ -30,7 +30,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     public ArrayList<Point> spritesImagesPosition;
     public ArrayList<String> spritesImagesPath;
     private JFrame window;
-    private SpriteCanvas spriteCanvas = null;
+    public SpriteCanvas spriteCanvas = null;
     public ArrayList<MyButton> buttons;
     private JButton zoomInButton;
     private JButton zoomOutButton;
@@ -54,6 +54,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     public int selectedFrame;
     public int numberOfFrames;
     public int zoom;
+    public int cameraX;
+	public int cameraY;
 
     public char isKeyPressed;
 
@@ -84,6 +86,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
                         SpriteHandler.instance.addImage(file);
                     }
+                    SpriteHandler.instance.spriteCanvas.preview.refreshImage();
                 }
             }));
             addImageButton = buttons.get(buttons.size() - 1);
@@ -92,6 +95,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
                 public void run() {
                     int index = imagesCombo.getSelectedIndex();
                     SpriteHandler.instance.removeImage(index);
+                    SpriteHandler.instance.spriteCanvas.preview.refreshImage();
                 }
             }));
             delImageButton = buttons.get(buttons.size() - 1);
@@ -104,6 +108,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
                         SpriteSheet.openSheet(file.getAbsolutePath());
                     }
+                    SpriteHandler.instance.spriteCanvas.preview.refreshImage();
                 }
             }));
             openImageButton = buttons.get(buttons.size() - 1);
@@ -196,6 +201,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         numberOfFrames = 0;
 
         zoom = 1;
+        cameraX = 0;
+        cameraY = 0;
 
         isKeyPressed = ' ';
 
@@ -356,20 +363,22 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         char c = e.getKeyChar();
         int move = 16;
         if (c == 'w')
-            spriteCanvas.cameraY -= move;
+            this.cameraY -= move;
         if (c == 's')
-            spriteCanvas.cameraY += move;
+        	this.cameraY += move;
         if (c == 'a')
-            spriteCanvas.cameraX -= move;
+        	this.cameraX -= move;
         if (c == 'd')
-            spriteCanvas.cameraX += move;
+        	this.cameraX += move;
         if (c == 'r')
-            spriteCanvas.cameraX = spriteCanvas.cameraY = 0;
+        	this.cameraX = this.cameraY = 0;
         if (c == 'z') {
-            int x = spriteCanvas.mouseX / zoom + spriteCanvas.cameraX;
-            int y = spriteCanvas.mouseY / zoom + spriteCanvas.cameraY;
+            int x = spriteCanvas.mouseX / zoom + this.cameraX;
+            int y = spriteCanvas.mouseY / zoom + this.cameraY;
             this.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).x = x;
             this.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).y = y;
+            
+            this.spriteCanvas.preview.refreshImage();
         }
         if (c == '+') {
             this.zoomIn();
@@ -377,10 +386,10 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         if (c == '-') {
             this.zoomOut();
         }
-        if (spriteCanvas.cameraX < -4)
-            spriteCanvas.cameraX = -4;
-        if (spriteCanvas.cameraY < -4)
-            spriteCanvas.cameraY = -4;
+        if (this.cameraX < -4)
+        	this.cameraX = -4;
+        if (this.cameraY < -4)
+        	this.cameraY = -4;
         redrawAll();
     }
 
@@ -415,8 +424,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     public void setFramePosition(int x, int y) {
     	Sprite spr = sprites.getSelectedSprite();
         if (spr != null) {
-	        x = x / zoom + spriteCanvas.cameraX;
-	        y = y / zoom + spriteCanvas.cameraY;
+	        x = x / zoom + this.cameraX;
+	        y = y / zoom + this.cameraY;
 	        spr.frames.get(selectedFrame - 1).box.x = x;
 	        spr.frames.get(selectedFrame - 1).box.y = y;
         }
@@ -427,8 +436,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         if (spr != null) {
 	        int x = spr.frames.get(selectedFrame - 1).box.x;
 	        int y = spr.frames.get(selectedFrame - 1).box.y;
-	        int w = newX / zoom + spriteCanvas.cameraX;
-	        int h = newY / zoom + spriteCanvas.cameraY;
+	        int w = newX / zoom + this.cameraX;
+	        int h = newY / zoom + this.cameraY;
 	        spr.frames.get(selectedFrame - 1).box.width = w - x;
 	        spr.frames.get(selectedFrame - 1).box.height = h - y;
         }
@@ -437,8 +446,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     public void setFrameCenter(int x, int y) {
     	Sprite spr = sprites.getSelectedSprite();
         if (spr != null) {
-	        x = x / zoom + spriteCanvas.cameraX;
-	        y = y / zoom + spriteCanvas.cameraY;
+	        x = x / zoom + this.cameraX;
+	        y = y / zoom + this.cameraY;
 	        int xb = spr.frames.get(selectedFrame - 1).box.x;
 	        int yb = spr.frames.get(selectedFrame - 1).box.y;
 	        spr.frames.get(selectedFrame - 1).center.x = x - xb;

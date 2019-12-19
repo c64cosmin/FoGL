@@ -15,18 +15,16 @@ import javax.swing.event.MouseInputListener;
 
 public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseListener, MouseInputListener {
     public static final int outputSize = 1024;
-    private static final long serialVersionUID = -5593088216030819037L;
+
     private SpriteHandler handler;
     private BufferedImage gridImage;
     private Graphics graphics;
-    public int cameraX;
-    public int cameraY;
     public int mouseX;
     public int mouseY;
     private boolean mouseInside;
     private boolean mouseOn;
 
-    private AnimationPreviewRenderer preview;
+    public AnimationPreviewRenderer preview;
 
     public SpriteCanvas(SpriteHandler handler) {
         this.setVisible(true);
@@ -50,40 +48,39 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
     @Override
     public void paint(Graphics g) {
         graphics = g;
-        render(g, true);
+        render(g, true, handler.cameraX, handler.cameraY, handler.zoom);
         this.preview.paint(g);
     }
 
-    public void render(Graphics g, boolean grid) {
+    public void render(Graphics g, boolean grid, int cameraX, int cameraY, int zoom) {
         if (grid) {
             g.setColor(Color.darkGray);
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
-            g.drawImage(gridImage, -cameraX * SpriteHandler.instance.zoom, -cameraY * SpriteHandler.instance.zoom,
-                    outputSize * SpriteHandler.instance.zoom, outputSize * SpriteHandler.instance.zoom, null);
+            g.drawImage(gridImage, -cameraX * zoom, -cameraY * zoom,
+                    outputSize * zoom, outputSize * zoom, null);
         }
 
-        for (int i = 0; i < SpriteHandler.instance.spritesImages.size(); i++) {
-            int x = SpriteHandler.instance.spritesImagesPosition.get(i).x - cameraX;
-            int y = SpriteHandler.instance.spritesImagesPosition.get(i).y - cameraY;
-            int w = SpriteHandler.instance.spritesImages.get(i).getWidth();
-            int h = SpriteHandler.instance.spritesImages.get(i).getHeight();
-            g.drawImage(SpriteHandler.instance.spritesImages.get(i), x * SpriteHandler.instance.zoom,
-                    y * SpriteHandler.instance.zoom, w * SpriteHandler.instance.zoom, h * SpriteHandler.instance.zoom,
+        for (int i = 0; i < handler.spritesImages.size(); i++) {
+            int x = handler.spritesImagesPosition.get(i).x - cameraX;
+            int y = handler.spritesImagesPosition.get(i).y - cameraY;
+            int w = handler.spritesImages.get(i).getWidth();
+            int h = handler.spritesImages.get(i).getHeight();
+            g.drawImage(handler.spritesImages.get(i), x * zoom, y * zoom, w * zoom, h * zoom,
                     null);
         }
 
         if (grid) {
             g.setColor(Color.BLUE);
-            if (SpriteHandler.instance.sprites.getSelectedSprite() != null && SpriteHandler.instance.selectedFrame > 0
-                    && SpriteHandler.instance.sprites.getSelectedSprite().frames.size() > 0) {
-                String spriteName = SpriteHandler.instance.sprites.getSelectedSprite().getName();
-                for (int i = 0; i < SpriteHandler.instance.sprites.getSelectedSprite().frames.size(); i++) {
-                    SpriteHandler.instance.sprites.getSelectedSprite().frames.get(i).drawFrameDecorator(g, spriteName, cameraX, cameraY,
-                            SpriteHandler.instance.zoom, i + 1);
+            if (handler.sprites.getSelectedSprite() != null && handler.selectedFrame > 0
+                    && handler.sprites.getSelectedSprite().frames.size() > 0) {
+                String spriteName = handler.sprites.getSelectedSprite().getName();
+                for (int i = 0; i < handler.sprites.getSelectedSprite().frames.size(); i++) {
+                    handler.sprites.getSelectedSprite().frames.get(i).drawFrameDecorator(g, spriteName, cameraX, cameraY,
+                            zoom, i + 1);
                 }
                 g.setColor(Color.RED);
-                SpriteHandler.instance.sprites.getSelectedSprite().frames.get(SpriteHandler.instance.selectedFrame - 1).drawFrameDecorator(g,
-                        spriteName, cameraX, cameraY, SpriteHandler.instance.zoom, 0);
+                handler.sprites.getSelectedSprite().frames.get(handler.selectedFrame - 1).drawFrameDecorator(g,
+                        spriteName, cameraX, cameraY, zoom, 0);
             }
         }
     }

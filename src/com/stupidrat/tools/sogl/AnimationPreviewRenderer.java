@@ -1,7 +1,9 @@
 package com.stupidrat.tools.sogl;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public class AnimationPreviewRenderer {
     private SpriteHandler handler;
@@ -9,6 +11,7 @@ public class AnimationPreviewRenderer {
 
     public int x;
     public int y;
+	private BufferedImage image;
 
     public AnimationPreviewRenderer(SpriteCanvas canvas, SpriteHandler handler) {
         this.handler = handler;
@@ -38,13 +41,19 @@ public class AnimationPreviewRenderer {
                 cy = frame.center.y;
             }
             if (frame != null) {
-                Image img = handler.spritesImages.get(0);
-                if (img != null) {
-                    g.drawImage(img, x - cx * s, y - cy * s, x + (w - cx) * s, y + (h - cy) * s, px, py, px + w, py + h,
+                if (image != null) {
+                    g.drawImage(image, x - cx * s, y - cy * s, x + (w - cx) * s, y + (h - cy) * s, px, py, px + w, py + h,
                             null);
                 }
             }
         }
+    }
+    
+    public void refreshImage() {
+    	image = new BufferedImage(this.canvas.outputSize, this.canvas.outputSize, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = image.createGraphics();
+
+        canvas.render(g, false, 0, 0, 1);
     }
 
     public void setPosition(int mouseX, int mouseY) {
