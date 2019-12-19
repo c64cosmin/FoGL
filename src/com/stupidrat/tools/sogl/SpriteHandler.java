@@ -361,7 +361,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         if (e.getSource() == this.getSpriteNameArea())
             return;
         char c = e.getKeyChar();
-        int move = 16;
+        int move = 16*(5-(int)(Math.log(zoom)/Math.log(2)));
         if (c == 'w')
             this.cameraY -= move;
         if (c == 's')

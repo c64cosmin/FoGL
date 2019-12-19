@@ -45,6 +45,7 @@ public class SpriteSheet {
 
             h.spritesImages.clear();
             h.spritesImagesPosition.clear();
+            h.getImagesCombo().removeAllItems();
             h.sprites.entries.clear();
 
             int noImages = scan.nextInt();scan.nextLine();

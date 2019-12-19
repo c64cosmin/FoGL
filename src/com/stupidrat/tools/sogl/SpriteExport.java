@@ -14,6 +14,7 @@ public class SpriteExport {
 
     private static String extension = ".sprmap";
 	private static String imageExtension = ".png";
+	private static int exportSize = 256;
 
 	public static void export(SpriteCanvas canvas, String filename) {
         if(filename.endsWith(extension)){
@@ -23,7 +24,7 @@ public class SpriteExport {
         	filename = filename.substring(0, filename.length() - imageExtension.length());
         }
         
-        int sz = canvas.outputSize;
+        int sz = exportSize ;
         BufferedImage image = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
         g.setColor(new Color(0,0,0,0));

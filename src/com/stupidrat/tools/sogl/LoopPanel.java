@@ -42,6 +42,9 @@ public class LoopPanel implements KeyListener {
 			listArea.addNewEntry(newSprite);
 			this.handler.resetFocus();
 		}
+		if(e.getKeyCode() == KeyEvent.VK_DELETE) {
+			this.listArea.removeSelected();
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {

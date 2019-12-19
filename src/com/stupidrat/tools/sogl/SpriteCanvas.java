@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.event.MouseInputListener;
 
 public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseListener, MouseInputListener {
-    public static final int outputSize = 1024;
+    public static final int outputSize = 4096;
 
     private SpriteHandler handler;
     private BufferedImage gridImage;

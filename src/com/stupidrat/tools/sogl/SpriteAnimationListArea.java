@@ -57,19 +57,18 @@ public class SpriteAnimationListArea extends JPanel implements MouseListener {
 
 
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		textArea.grabFocus();
 	}
 
 
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		handler.resetFocus();
 	}
 
 
 	public void mousePressed(MouseEvent e) {
-		System.out.println(e.getY());
+		textArea.grabFocus();
+		
 		int y = (e.getY()-5) / rowWidth - 2;
 		
 		this.selected = -1;
@@ -117,5 +116,12 @@ public class SpriteAnimationListArea extends JPanel implements MouseListener {
 		if(selected != -1 && selected < entries.size())
 			return entries.get(selected);
 		return null;
+	}
+
+	public void removeSelected() {
+		if(selected != -1 && selected < entries.size())
+			entries.remove(selected);
+		
+		handler.redrawAll();
 	}
 }
