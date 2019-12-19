@@ -12,7 +12,17 @@ import javax.imageio.ImageIO;
 
 public class SpriteExport {
 
-    public static void export(SpriteCanvas canvas, String filename) {
+    private static String extension = ".sprmap";
+	private static String imageExtension = ".png";
+
+	public static void export(SpriteCanvas canvas, String filename) {
+        if(filename.endsWith(extension)){
+        	filename = filename.substring(0, filename.length() - extension.length());
+        }
+        if(filename.endsWith(imageExtension )){
+        	filename = filename.substring(0, filename.length() - imageExtension.length());
+        }
+        
         int sz = canvas.outputSize;
         BufferedImage image = new BufferedImage(sz, sz, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
@@ -23,13 +33,13 @@ public class SpriteExport {
 
         try {
             FileOutputStream imageOut;
-            imageOut = new FileOutputStream(filename+".png");
+            imageOut = new FileOutputStream(filename+imageExtension);
             ImageIO.write(image, "png", imageOut);
             imageOut.close();
 
             SpriteHandler h = SpriteHandler.instance;
 
-            FileWriter out = new FileWriter(new File(filename + ".sprmap"));
+            FileWriter out = new FileWriter(new File(filename + extension));
 
             int noSprites = h.sprites.entries.size();
             out.write(noSprites+"\n");
