@@ -24,11 +24,11 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 public class SpriteHandler implements ActionListener, KeyListener, ItemListener {
+	public static int targetExportSize = 512;
     public static SpriteHandler instance;
+    
+    public SpriteSheet sheet;
 
-    public ArrayList<BufferedImage> spritesImages;
-    public ArrayList<Point> spritesImagesPosition;
-    public ArrayList<String> spritesImagesPath;
     private JFrame window;
     public SpriteCanvas spriteCanvas = null;
     public ArrayList<MyButton> buttons;
@@ -48,8 +48,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     private JButton delFrameButton;
     private JComboBox<String> imagesCombo;
     private JTextArea spriteName;
-    
-    public SpriteAnimationListArea sprites;
 
     public int selectedFrame;
     public int numberOfFrames;
@@ -106,7 +104,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
                     if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
 
-                        SpriteSheet.openSheet(file.getAbsolutePath());
+                        SpriteHandler.instance.sheet.openSheet(file.getAbsolutePath());
                     }
                     SpriteHandler.instance.spriteCanvas.preview.refreshImage();
                 }
@@ -119,20 +117,15 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
                     if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
                         File file = fileChooser.getSelectedFile();
 
-                        SpriteSheet.saveSheet(file.getAbsolutePath());
+                        SpriteHandler.instance.sheet.saveSheet(file.getAbsolutePath());
                     }
                 }
             }));
             saveImageButton = buttons.get(buttons.size() - 1);
 
-            buttons.add(new MyButton("Export sheet", new Runnable() {
+            buttons.add(new MyButton("Pack sheet", new Runnable() {
                 public void run() {
-                    JFileChooser fileChooser = new JFileChooser();
-                    if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-                        File file = fileChooser.getSelectedFile();
-
-                        SpriteExport.export(SpriteHandler.instance.getCanvas(), file.getAbsolutePath());
-                    }
+                    SpriteHandler.instance.sheet.pack(SpriteHandler.instance.sheet.filename, targetExportSize);
                 }
             }));
             exportImageButton = buttons.get(buttons.size() - 1);
@@ -159,8 +152,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
                     int h = 64;
                     int cx = 32;
                     int cy = 32;
-                    if (SpriteHandler.instance.sprites.getSelectedSprite() != null) {
-                        ArrayList<Frame> frames = SpriteHandler.instance.sprites.getSelectedSprite().frames;
+                    if (sheet.sprites.getSelectedSprite() != null) {
+                        ArrayList<Frame> frames = sheet.sprites.getSelectedSprite().frames;
                         if (frames.size() > 0) {
                             w = frames.get(frames.size() - 1).box.width;
                             h = frames.get(frames.size() - 1).box.height;
@@ -168,14 +161,14 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
                             cy = frames.get(frames.size() - 1).center.y;
                         }
                     }
-                    SpriteHandler.instance.sprites.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(cx, cy));
+                    sheet.sprites.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(cx, cy));
                 }
             }));
             addFrameButton = buttons.get(buttons.size() - 1);
 
             buttons.add(new MyButton("Del frame", new Runnable() {
                 public void run() {
-                    SpriteHandler.instance.sprites.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
+                    sheet.sprites.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
                 }
             }));
             delFrameButton = buttons.get(buttons.size() - 1);
@@ -192,10 +185,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         middleSpriteButton.setVerticalAlignment(SwingConstants.CENTER);
 
         spriteCanvas = new SpriteCanvas(this);
-
-        spritesImages = new ArrayList<BufferedImage>();
-        spritesImagesPosition = new ArrayList<Point>();
-        spritesImagesPath = new ArrayList<String>();
+        
+        sheet = new SpriteSheet();
 
         selectedFrame = 0;
         numberOfFrames = 0;
@@ -222,9 +213,9 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     }
 
     protected void removeImage(int index) {
-        if (index != -1 && index <= spritesImages.size()) {
-            spritesImages.remove(index);
-            spritesImagesPosition.remove(index);
+        if (index != -1 && index <= sheet.spritesImages.size()) {
+        	sheet.spritesImages.remove(index);
+        	sheet.spritesImagesPosition.remove(index);
             imagesCombo.removeItemAt(index);
         }
     }
@@ -237,9 +228,9 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         BufferedImage img = null;
         try {
             img = ImageIO.read(file);
-            spritesImages.add(img);
-            spritesImagesPosition.add(new Point(x, y));
-            spritesImagesPath.add(file.getAbsolutePath());
+            sheet.spritesImages.add(img);
+            sheet.spritesImagesPosition.add(new Point(x, y));
+            sheet.spritesImagesPath.add(file.getAbsolutePath());
             imagesCombo.addItem(file.getName());
         } catch (IOException e) {
         }
@@ -328,7 +319,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         }
         int code = e.getKeyCode();
         if (code == KeyEvent.VK_LEFT) {
-            Sprite sprite = this.sprites.getSelectedSprite();
+            Sprite sprite = this.sheet.sprites.getSelectedSprite();
             if (sprite != null) {
                 this.selectedFrame--;
                 if (this.selectedFrame == 0) {
@@ -337,7 +328,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
             }
         }
         if (code == KeyEvent.VK_RIGHT) {
-            Sprite sprite = this.sprites.getSelectedSprite();
+            Sprite sprite = this.sheet.sprites.getSelectedSprite();
             if (sprite != null) {
                 this.selectedFrame++;
                 if (this.selectedFrame > sprite.frames.size()) {
@@ -375,8 +366,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
         if (c == 'z') {
             int x = spriteCanvas.mouseX / zoom + this.cameraX;
             int y = spriteCanvas.mouseY / zoom + this.cameraY;
-            this.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).x = x;
-            this.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).y = y;
+            sheet.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).x = x;
+            sheet.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).y = y;
             
             this.spriteCanvas.preview.refreshImage();
         }
@@ -400,8 +391,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     }
 
     private void refreshCounter() {
-    	if(this.sprites != null && this.sprites.getSelectedSprite() != null) {
-            this.numberOfFrames = this.sprites.getSelectedSprite().frames.size();
+    	if(sheet.sprites != null && sheet.sprites.getSelectedSprite() != null) {
+            this.numberOfFrames = sheet.sprites.getSelectedSprite().frames.size();
             if (this.selectedFrame > this.numberOfFrames)
                 this.selectedFrame = this.numberOfFrames;
             if (this.selectedFrame <= 0)
@@ -413,8 +404,8 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     public void redrawAll() {
         refreshCounter();
         this.spriteCanvas.repaint();
-        if(this.sprites != null)
-        	this.sprites.repaint();
+        if(sheet.sprites != null)
+        	sheet.sprites.repaint();
     }
 
     public void resetFocus() {
@@ -422,7 +413,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     }
 
     public void setFramePosition(int x, int y) {
-    	Sprite spr = sprites.getSelectedSprite();
+    	Sprite spr = sheet.sprites.getSelectedSprite();
         if (spr != null) {
 	        x = x / zoom + this.cameraX;
 	        y = y / zoom + this.cameraY;
@@ -432,7 +423,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     }
 
     public void setFrameSize(int newX, int newY) {
-    	Sprite spr = sprites.getSelectedSprite();
+    	Sprite spr = sheet.sprites.getSelectedSprite();
         if (spr != null) {
 	        int x = spr.frames.get(selectedFrame - 1).box.x;
 	        int y = spr.frames.get(selectedFrame - 1).box.y;
@@ -444,7 +435,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     }
 
     public void setFrameCenter(int x, int y) {
-    	Sprite spr = sprites.getSelectedSprite();
+    	Sprite spr = sheet.sprites.getSelectedSprite();
         if (spr != null) {
 	        x = x / zoom + this.cameraX;
 	        y = y / zoom + this.cameraY;
@@ -456,6 +447,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
     }
 
 	public void setAnimationListArea(SpriteAnimationListArea listArea) {
-		sprites = listArea;
+		sheet.sprites = listArea;
 	}
 }

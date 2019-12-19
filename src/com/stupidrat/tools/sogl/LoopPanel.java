@@ -18,6 +18,7 @@ public class LoopPanel implements KeyListener {
 		textArea.addKeyListener(this);
 		
 		this.listArea = new SpriteAnimationListArea(parent, textArea);
+		SpriteHandler.instance.sheet.sprites = this.listArea;
 	}
 	
 	public JPanel getJPanel() {

@@ -21,6 +21,7 @@ public class SpriteAnimationListArea extends JPanel implements MouseListener {
 	private JTextArea textArea;
 
 	public SpriteAnimationListArea(SpriteHandler parent, JTextArea textArea) {
+		super();
 		this.handler = parent;
 		this.handler.setAnimationListArea(this);
 		this.textArea = textArea;
@@ -28,7 +29,20 @@ public class SpriteAnimationListArea extends JPanel implements MouseListener {
 		entries = new ArrayList<Sprite>();
 	}	
 
-    @Override
+    public SpriteAnimationListArea(SpriteAnimationListArea inputSprites) {
+		super();
+		
+		for(Sprite sprite : inputSprites.entries) {
+			entries.add(new Sprite(sprite));
+		}
+	}
+
+	public SpriteAnimationListArea() {
+		selected = -1;
+		this.entries = new ArrayList<Sprite>();
+	}
+
+	@Override
     public void update(Graphics g) {
         paint(g);
     }

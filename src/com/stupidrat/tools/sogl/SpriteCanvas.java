@@ -48,11 +48,11 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
     @Override
     public void paint(Graphics g) {
         graphics = g;
-        render(g, true, handler.cameraX, handler.cameraY, handler.zoom);
+        render(g, SpriteHandler.instance.sheet, true, handler.cameraX, handler.cameraY, handler.zoom);
         this.preview.paint(g);
     }
 
-    public void render(Graphics g, boolean grid, int cameraX, int cameraY, int zoom) {
+    public void render(Graphics g, SpriteSheet sheet, boolean grid, int cameraX, int cameraY, int zoom) {
         if (grid) {
             g.setColor(Color.darkGray);
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -60,26 +60,26 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
                     outputSize * zoom, outputSize * zoom, null);
         }
 
-        for (int i = 0; i < handler.spritesImages.size(); i++) {
-            int x = handler.spritesImagesPosition.get(i).x - cameraX;
-            int y = handler.spritesImagesPosition.get(i).y - cameraY;
-            int w = handler.spritesImages.get(i).getWidth();
-            int h = handler.spritesImages.get(i).getHeight();
-            g.drawImage(handler.spritesImages.get(i), x * zoom, y * zoom, w * zoom, h * zoom,
+        for (int i = 0; i < sheet.spritesImages.size(); i++) {
+            int x = sheet.spritesImagesPosition.get(i).x - cameraX;
+            int y = sheet.spritesImagesPosition.get(i).y - cameraY;
+            int w = sheet.spritesImages.get(i).getWidth();
+            int h = sheet.spritesImages.get(i).getHeight();
+            g.drawImage(sheet.spritesImages.get(i), x * zoom, y * zoom, w * zoom, h * zoom,
                     null);
         }
 
         if (grid) {
             g.setColor(Color.BLUE);
-            if (handler.sprites.getSelectedSprite() != null && handler.selectedFrame > 0
-                    && handler.sprites.getSelectedSprite().frames.size() > 0) {
-                String spriteName = handler.sprites.getSelectedSprite().getName();
-                for (int i = 0; i < handler.sprites.getSelectedSprite().frames.size(); i++) {
-                    handler.sprites.getSelectedSprite().frames.get(i).drawFrameDecorator(g, spriteName, cameraX, cameraY,
+            if (sheet.sprites.getSelectedSprite() != null && SpriteHandler.instance.selectedFrame > 0
+                    && sheet.sprites.getSelectedSprite().frames.size() > 0) {
+                String spriteName = sheet.sprites.getSelectedSprite().getName();
+                for (int i = 0; i < sheet.sprites.getSelectedSprite().frames.size(); i++) {
+                    sheet.sprites.getSelectedSprite().frames.get(i).drawFrameDecorator(g, spriteName, cameraX, cameraY,
                             zoom, i + 1);
                 }
                 g.setColor(Color.RED);
-                handler.sprites.getSelectedSprite().frames.get(handler.selectedFrame - 1).drawFrameDecorator(g,
+                sheet.sprites.getSelectedSprite().frames.get(SpriteHandler.instance.selectedFrame - 1).drawFrameDecorator(g,
                         spriteName, cameraX, cameraY, zoom, 0);
             }
         }
