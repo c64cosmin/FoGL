@@ -2,19 +2,30 @@
 #include <stdio.h>
 #include <string.h>
 
+#define NBUF 256
+
 void writeLInt(int x, FILE* f);
 void writeInt(int x, FILE* f);
 int main(int argn, char** argv){
     if(argn == 2){
         FILE* f = fopen(argv[1], "r");
+        char* extension = ".sheet";
         int n = strlen(argv[1]);
-        argv[1][n-3] = 0;
-        FILE* out = fopen(argv[1], "wb");
+        char* filePath = argv[1];
+        char newFilePath[NBUF*2] = {};
+        strcpy(newFilePath, filePath);
+        strcat(newFilePath, ".bin");
+        FILE* out = fopen(newFilePath, "wb");
+        printf("Opened %s\nWill convert to %s", filePath, newFilePath);
 
-        char buf[128];
-        for(int i=0; i<128; i++){
+        char buf[NBUF];
+        for(int i=0; i<NBUF; i++){
             buf[i]=0;
         }
+
+        int n_img;
+        fscanf(f, "%i\n", &n_img);
+        while(n_img--)fgets(buf, NBUF, f);
 
         int n_spr;
         fscanf(f, "%i\n", &n_spr);
@@ -23,11 +34,11 @@ int main(int argn, char** argv){
         writeLInt(n_spr, out);
         for(int j=0;j<n_spr;j++){
             //clean
-            for(int i=0;i<128;i++){
+            for(int i=0;i<NBUF;i++){
                 buf[i]=0;
             }
             //read string
-            for(int i=0;i<128;i++){
+            for(int i=0;i<NBUF;i++){
                 char chr = fgetc(f);
                 if(chr == ' ')break;
                 buf[i] = chr;
