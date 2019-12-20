@@ -24,7 +24,7 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 public class SpriteHandler implements ActionListener, KeyListener, ItemListener {
-	public static int targetExportSize = 512;
+	public static int targetExportSize = 1024;
 	public static SpriteHandler instance;
 
 	public SpriteSheet sheet;
@@ -216,6 +216,7 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 		if (index != -1 && index <= sheet.spritesImages.size()) {
 			sheet.spritesImages.remove(index);
 			sheet.spritesImagesPosition.remove(index);
+			sheet.spritesImagesPath.remove(index);
 			imagesCombo.removeItemAt(index);
 		}
 	}
