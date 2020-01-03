@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.stupidrat.tools</groupId>
   <artifactId>fogl</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
   <name>FoGL</name>
   <description>Font and Sprite tool</description>
   <build>
@@ -23,7 +23,7 @@
         <configuration>
           <archive>
             <manifest>
-              <mainClass>com.stupidrat.tools.fogl.Main</mainClass>
+              <mainClass>com.stupidrat.tools.fogl.FoGLMain</mainClass>
             </manifest>
           </archive>
         </configuration>
