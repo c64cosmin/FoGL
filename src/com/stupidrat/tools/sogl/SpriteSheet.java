@@ -69,10 +69,10 @@ public class SpriteSheet {
 			if (filename.endsWith(extension)) {
 				filename = filename.substring(0, filename.length() - extension.length());
 			}
-			if (fullname.endsWith(imageExtension)) {
+			if (filename.endsWith(imageExtension)) {
 				filename = filename.substring(0, filename.length() - imageExtension.length());
 			}
-			if (fullname.endsWith(modifier)) {
+			if (filename.endsWith(modifier)) {
 				filename = filename.substring(0, filename.length() - modifier.length());
 			}
 

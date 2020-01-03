@@ -329,6 +329,9 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 		char c = e.getKeyChar();
 		if (c == 'q' || c == 'e' || c == 'c' || c == 'p') {
 			isKeyPressed = c;
+			if(c == 'p') {
+				this.spriteCanvas.preview.refreshImage();
+			}
 			this.spriteCanvas.doMouseMove();
 		}
 		int code = e.getKeyCode();
