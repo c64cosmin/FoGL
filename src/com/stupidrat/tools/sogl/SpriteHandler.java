@@ -12,6 +12,8 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -47,7 +49,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 	private JButton addFrameButton;
 	private JButton delFrameButton;
 	private JComboBox<String> imagesCombo;
-	private JTextArea spriteName;
 
 	public int selectedFrame;
 	public int numberOfFrames;
@@ -113,12 +114,16 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
 			buttons.add(new MyButton("Save sheet", new Runnable() {
 				public void run() {
-					JFileChooser fileChooser = new JFileChooser();
-					if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-						File file = fileChooser.getSelectedFile();
+					String saveFileName = SpriteHandler.instance.sheet.filename;
+					if(SpriteHandler.instance.sheet.filename == null) {
+						JFileChooser fileChooser = new JFileChooser();
+						if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+							File file = fileChooser.getSelectedFile();
 
-						SpriteHandler.instance.sheet.saveSheet(file.getAbsolutePath());
+							saveFileName = file.getAbsolutePath();
+						}	
 					}
+					SpriteHandler.instance.sheet.saveSheet(saveFileName);
 				}
 			}));
 			saveImageButton = buttons.get(buttons.size() - 1);
@@ -177,9 +182,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 		imagesCombo = new JComboBox<String>();
 		imagesCombo.addActionListener(this);
 
-		spriteName = new JTextArea("New sprite name");
-		spriteName.addKeyListener(this);
-
 		middleSpriteButton = new JLabel("0/0");
 		middleSpriteButton.setHorizontalAlignment(SwingConstants.CENTER);
 		middleSpriteButton.setVerticalAlignment(SwingConstants.CENTER);
@@ -222,29 +224,26 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 	}
 
 	protected void addImage(File file) {
-		String filePathCommon = SpriteHandler.instance.sheet.filename;
-		String filePath = file.getAbsolutePath();
-		String newFilePath = filePath;
+	    String sheetPath = SpriteHandler.instance.sheet.filename;
+        String imagePath = file.getAbsolutePath();
 
-		if (filePathCommon != null) {
-			int i = 0;
-			while (i < filePathCommon.length() && i < filePath.length()
-					&& filePathCommon.charAt(i) == filePath.charAt(i)) {
-				i++;
-			}
-			newFilePath = filePath.substring(i, filePath.length());
-		}
+        String relativePath = imagePath;
+        if(sheetPath != null) {
+            Path image = Paths.get(imagePath);
+            Path sheet = Paths.get(sheetPath);
+            relativePath = sheet.relativize(image).toString(); 
+        }
 
-		addImage(newFilePath, file, 0, 0);
+		addImage(relativePath, file, 0, 0);
 	}
 
-	public void addImage(String imageName, File file, int x, int y) {
+	public void addImage(String imagePath, File file, int x, int y) {
 		BufferedImage img = null;
 		try {
 			img = ImageIO.read(file);
 			sheet.spritesImages.add(img);
 			sheet.spritesImagesPosition.add(new Point(x, y));
-			sheet.spritesImagesPath.add(imageName);
+			sheet.spritesImagesPath.add(imagePath);
 			imagesCombo.addItem(file.getName());
 		} catch (IOException e) {
 		}
@@ -281,10 +280,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 
 	public JComboBox<String> getImagesCombo() {
 		return imagesCombo;
-	}
-
-	public JTextArea getSpriteNameArea() {
-		return spriteName;
 	}
 
 	public JPanel getSpriteButton() {
@@ -366,8 +361,6 @@ public class SpriteHandler implements ActionListener, KeyListener, ItemListener 
 	}
 
 	public void keyTyped(KeyEvent e) {
-		if (e.getSource() == this.getSpriteNameArea())
-			return;
 		char c = e.getKeyChar();
 		int move = 16 * (5 - (int) (Math.log(zoom) / Math.log(2)));
 		if (c == 'w')

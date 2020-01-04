@@ -57,7 +57,7 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
             g.setColor(Color.darkGray);
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
             g.drawImage(gridImage, -cameraX * zoom, -cameraY * zoom,
-                    outputSize * zoom, outputSize * zoom, null);
+                        outputSize * zoom, outputSize * zoom, null);
         }
 
         for (int i = 0; i < sheet.spritesImages.size(); i++) {
@@ -66,7 +66,7 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
             int w = sheet.spritesImages.get(i).getWidth();
             int h = sheet.spritesImages.get(i).getHeight();
             g.drawImage(sheet.spritesImages.get(i), x * zoom, y * zoom, w * zoom, h * zoom,
-                    null);
+                        null);
         }
 
         if (grid) {
@@ -80,7 +80,7 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
                 }
                 g.setColor(Color.RED);
                 sheet.sprites.getSelectedSprite().frames.get(SpriteHandler.instance.selectedFrame - 1).drawFrameDecorator(g,
-                        spriteName, cameraX, cameraY, zoom, 0);
+                                                             spriteName, cameraX, cameraY, zoom, 0);
             }
         }
     }

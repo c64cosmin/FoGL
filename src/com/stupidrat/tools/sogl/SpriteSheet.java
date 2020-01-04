@@ -61,19 +61,20 @@ public class SpriteSheet {
 	public void openSheet(String fullname) {
 		try {
 			filename = fullname;
+			String trimmedName = fullname;
 
 			String extension = ".sheet";
 			String modifier = ".packed";
 			String imageExtension = ".png";
 
-			if (filename.endsWith(extension)) {
-				filename = filename.substring(0, filename.length() - extension.length());
+			if (trimmedName.endsWith(extension)) {
+			    trimmedName = trimmedName.substring(0, trimmedName.length() - extension.length());
 			}
-			if (filename.endsWith(imageExtension)) {
-				filename = filename.substring(0, filename.length() - imageExtension.length());
+			if (trimmedName.endsWith(imageExtension)) {
+			    trimmedName = trimmedName.substring(0, trimmedName.length() - imageExtension.length());
 			}
-			if (filename.endsWith(modifier)) {
-				filename = filename.substring(0, filename.length() - modifier.length());
+			if (trimmedName.endsWith(modifier)) {
+			    trimmedName = trimmedName.substring(0, trimmedName.length() - modifier.length());
 			}
 
 			int pathLength = fullname.length() - 1;
@@ -112,7 +113,7 @@ public class SpriteSheet {
 				miniScan.close();
 
 				SpriteHandler.instance.addImage(imageFileName, new File(path + imageFileName), posX, posY);
-				System.out.println(path + imageFileName);
+				System.out.println("Loaded image : " + path + imageFileName);
 			}
 
 			int noSprites = scan.nextInt();
