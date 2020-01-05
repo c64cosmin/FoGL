@@ -31,12 +31,13 @@ public class SpriteSheet {
         sprites = new SpriteAnimationListArea();
     }
 
-    public void saveSheet(String filename) {
-        String fullName = filename;
-        if (!fullName.endsWith(".sheet")) {
-            fullName += ".sheet";
+    public void saveSheet(String fullname) {
+        filename = fullname;
+        String trimmedName = filename;
+        if (!trimmedName.endsWith(".sheet")) {
+            trimmedName += ".sheet";
         }
-        File f = new File(fullName);
+        File f = new File(trimmedName);
         try {
             FileWriter out = new FileWriter(f);
             out.write(spritesImages.size() + "\n");
