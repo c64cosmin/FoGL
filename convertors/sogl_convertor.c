@@ -8,6 +8,7 @@ void writeLInt(int x, FILE* f);
 void writeInt(int x, FILE* f);
 int main(int argn, char** argv){
     if(argn == 2){
+        printf("Converting %s\n", argv[1]);
         FILE* f = fopen(argv[1], "r");
         char* extension = ".sheet";
         int n = strlen(argv[1]);
@@ -16,7 +17,11 @@ int main(int argn, char** argv){
         strcpy(newFilePath, filePath);
         strcat(newFilePath, ".bin");
         FILE* out = fopen(newFilePath, "wb");
-        printf("Opened %s\nWill convert to %s", filePath, newFilePath);
+        if(!out){
+            printf("Failed to convert!\n");
+            return 1;
+        }
+        printf("Opened %s\nWill convert to %s\n", filePath, newFilePath);
 
         char buf[NBUF];
         for(int i=0; i<NBUF; i++){
@@ -25,6 +30,7 @@ int main(int argn, char** argv){
 
         int n_img;
         fscanf(f, "%i\n", &n_img);
+        printf("Found %i images\n", n_img);
         while(n_img--)fgets(buf, NBUF, f);
 
         int n_spr;
