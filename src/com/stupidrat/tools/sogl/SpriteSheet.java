@@ -141,7 +141,7 @@ public class SpriteSheet {
 
         String extension = ".sheet";
         String modifier = ".packed";
-        String imageExtension = ".png";
+        String imageExtension = ".spr.png";
 
         if (trimmedName.endsWith(modifier)) {
             trimmedName = trimmedName.substring(0, trimmedName.length() - modifier.length());
