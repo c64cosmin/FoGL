@@ -73,7 +73,7 @@ public class AnimationPreviewRenderer {
         image = new BufferedImage(this.canvas.outputSize, this.canvas.outputSize, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
 
-        canvas.render(g, SpriteHandler.instance.sheet, false, 0, 0, 1);
+        canvas.render(g, SpriteHandler.instance.sheet, false, false, 0, 0, 1);
     }
 
     public void setPosition(int mouseX, int mouseY) {

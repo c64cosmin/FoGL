@@ -26,437 +26,465 @@ import javax.swing.JTextArea;
 import javax.swing.SwingConstants;
 
 public class SpriteHandler implements ActionListener, KeyListener, ItemListener {
-	public static int targetExportSize = 1024;
-	public static SpriteHandler instance;
+    public static int targetExportSize = 1024;
+    public static SpriteHandler instance;
 
-	public SpriteSheet sheet;
+    public SpriteSheet sheet;
 
-	private JFrame window;
-	public SpriteCanvas spriteCanvas = null;
-	public ArrayList<MyButton> buttons;
-	private JButton zoomInButton;
-	private JButton zoomOutButton;
-	private JButton addImageButton;
-	private JButton delImageButton;
-	private JButton openImageButton;
-	private JButton saveImageButton;
-	private JButton exportImageButton;
-	private JButton addSpriteButton;
-	private JButton delSpriteButton;
-	private JButton leftSpriteButton;
-	private JLabel middleSpriteButton;
-	private JButton rightSpriteButton;
-	private JButton addFrameButton;
-	private JButton delFrameButton;
-	private JComboBox<String> imagesCombo;
+    private JFrame window;
+    public SpriteCanvas spriteCanvas = null;
+    public ArrayList<MyButton> buttons;
+    private JButton zoomInButton;
+    private JButton zoomOutButton;
+    private JButton addImageButton;
+    private JButton delImageButton;
+    private JButton openImageButton;
+    private JButton saveImageButton;
+    private JButton exportImageButton;
+    private JButton addSpriteButton;
+    private JButton delSpriteButton;
+    private JButton leftSpriteButton;
+    private JLabel middleSpriteButton;
+    private JButton rightSpriteButton;
+    private JButton addFrameButton;
+    private JButton delFrameButton;
+    private JComboBox<String> imagesCombo;
 
-	public int selectedFrame;
-	public int numberOfFrames;
-	public int zoom;
-	public int cameraX;
-	public int cameraY;
+    public int selectedFrame;
+    public int numberOfFrames;
+    public int zoom;
+    public int cameraX;
+    public int cameraY;
 
-	public char isKeyPressed;
+    public char isKeyPressed;
 
-	public SpriteHandler() {
-		SpriteHandler.instance = this;
+    public SpriteHandler() {
+        SpriteHandler.instance = this;
 
-		{
-			buttons = new ArrayList<MyButton>();
-			buttons.add(new MyButton("+", new Runnable() {
-				public void run() {
-					SpriteHandler.instance.zoomIn();
-				}
-			}));
-			zoomInButton = buttons.get(buttons.size() - 1);
+        {
+            buttons = new ArrayList<MyButton>();
+            buttons.add(new MyButton("+", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.zoomIn();
+                }
+            }));
+            zoomInButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("-", new Runnable() {
-				public void run() {
-					SpriteHandler.instance.zoomOut();
-				}
-			}));
-			zoomOutButton = buttons.get(buttons.size() - 1);
+            buttons.add(new MyButton("-", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.zoomOut();
+                }
+            }));
+            zoomOutButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("Add image", new Runnable() {
-				public void run() {
-					JFileChooser fileChooser = new JFileChooser();
-					if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-						File file = fileChooser.getSelectedFile();
+            buttons.add(new MyButton("Add image", new Runnable() {
+                public void run() {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
 
-						SpriteHandler.instance.addImage(file);
-					}
-					SpriteHandler.instance.spriteCanvas.preview.refreshImage();
-				}
-			}));
-			addImageButton = buttons.get(buttons.size() - 1);
+                        SpriteHandler.instance.addImage(file);
+                    }
+                    SpriteHandler.instance.spriteCanvas.preview.refreshImage();
+                }
+            }));
+            addImageButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("Del image", new Runnable() {
-				public void run() {
-					int index = imagesCombo.getSelectedIndex();
-					SpriteHandler.instance.removeImage(index);
-					SpriteHandler.instance.spriteCanvas.preview.refreshImage();
-				}
-			}));
-			delImageButton = buttons.get(buttons.size() - 1);
+            buttons.add(new MyButton("Del image", new Runnable() {
+                public void run() {
+                    int index = imagesCombo.getSelectedIndex();
+                    SpriteHandler.instance.removeImage(index);
+                    SpriteHandler.instance.spriteCanvas.preview.refreshImage();
+                }
+            }));
+            delImageButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("Open sheet", new Runnable() {
-				public void run() {
-					JFileChooser fileChooser = new JFileChooser();
-					if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-						File file = fileChooser.getSelectedFile();
+            buttons.add(new MyButton("Open sheet", new Runnable() {
+                public void run() {
+                    JFileChooser fileChooser = new JFileChooser();
+                    if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                        File file = fileChooser.getSelectedFile();
 
-						SpriteHandler.instance.sheet.openSheet(file.getAbsolutePath());
-					}
-					SpriteHandler.instance.spriteCanvas.preview.refreshImage();
-				}
-			}));
-			openImageButton = buttons.get(buttons.size() - 1);
+                        SpriteHandler.instance.sheet.openSheet(file.getAbsolutePath());
+                    }
+                    SpriteHandler.instance.spriteCanvas.preview.refreshImage();
+                }
+            }));
+            openImageButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("Save sheet", new Runnable() {
-				public void run() {
-					String saveFileName = SpriteHandler.instance.sheet.filename;
-					if(SpriteHandler.instance.sheet.filename == null) {
-						JFileChooser fileChooser = new JFileChooser();
-						if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
-							File file = fileChooser.getSelectedFile();
+            buttons.add(new MyButton("Save sheet", new Runnable() {
+                public void run() {
+                    String saveFileName = SpriteHandler.instance.sheet.filename;
+                    if (SpriteHandler.instance.sheet.filename == null) {
+                        JFileChooser fileChooser = new JFileChooser();
+                        if (fileChooser.showSaveDialog(window) == JFileChooser.APPROVE_OPTION) {
+                            File file = fileChooser.getSelectedFile();
 
-							saveFileName = file.getAbsolutePath();
-						}	
-					}
-					SpriteHandler.instance.sheet.saveSheet(saveFileName);
-				}
-			}));
-			saveImageButton = buttons.get(buttons.size() - 1);
+                            saveFileName = file.getAbsolutePath();
+                        }
+                    }
+                    SpriteHandler.instance.sheet.saveSheet(saveFileName);
+                }
+            }));
+            saveImageButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("Pack sheet", new Runnable() {
-				public void run() {
-					SpriteHandler.instance.sheet.pack(SpriteHandler.instance.sheet.filename, targetExportSize);
-				}
-			}));
-			exportImageButton = buttons.get(buttons.size() - 1);
+            buttons.add(new MyButton("Pack sheet", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.sheet.pack(SpriteHandler.instance.sheet.filename, targetExportSize);
+                }
+            }));
+            exportImageButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton(">", new Runnable() {
-				public void run() {
-					SpriteHandler.instance.selectedFrame++;
-					refreshCounter();
-				}
-			}));
-			rightSpriteButton = buttons.get(buttons.size() - 1);
+            buttons.add(new MyButton(">", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.selectedFrame++;
+                    refreshCounter();
+                }
+            }));
+            rightSpriteButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("<", new Runnable() {
-				public void run() {
-					SpriteHandler.instance.selectedFrame--;
-					refreshCounter();
-				}
-			}));
-			leftSpriteButton = buttons.get(buttons.size() - 1);
+            buttons.add(new MyButton("<", new Runnable() {
+                public void run() {
+                    SpriteHandler.instance.selectedFrame--;
+                    refreshCounter();
+                }
+            }));
+            leftSpriteButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("Add frame", new Runnable() {
-				public void run() {
-					int w = 64;
-					int h = 64;
-					int cx = 32;
-					int cy = 32;
-					if (sheet.sprites.getSelectedSprite() != null) {
-						ArrayList<Frame> frames = sheet.sprites.getSelectedSprite().frames;
-						if (frames.size() > 0) {
-							w = frames.get(frames.size() - 1).box.width;
-							h = frames.get(frames.size() - 1).box.height;
-							cx = frames.get(frames.size() - 1).center.x;
-							cy = frames.get(frames.size() - 1).center.y;
-						}
-					}
-					sheet.sprites.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Point(cx, cy));
-				}
-			}));
-			addFrameButton = buttons.get(buttons.size() - 1);
+            buttons.add(new MyButton("Add frame", new Runnable() {
+                public void run() {
+                    int w = 64;
+                    int h = 64;
+                    int cx = 32;
+                    int cy = 32;
+                    if (sheet.sprites.getSelectedSprite() != null) {
+                        ArrayList<Frame> frames = sheet.sprites.getSelectedSprite().frames;
+                        if (frames.size() > 0) {
+                            w = frames.get(frames.size() - 1).box.width;
+                            h = frames.get(frames.size() - 1).box.height;
+                            cx = frames.get(frames.size() - 1).center.x;
+                            cy = frames.get(frames.size() - 1).center.y;
+                        }
+                    }
+                    sheet.sprites.getSelectedSprite().addFrame(new Rectangle(0, 0, w, h), new Rectangle(0, 0, 16, 16),
+                            new Point(cx, cy));
+                }
+            }));
+            addFrameButton = buttons.get(buttons.size() - 1);
 
-			buttons.add(new MyButton("Del frame", new Runnable() {
-				public void run() {
-					sheet.sprites.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
-				}
-			}));
-			delFrameButton = buttons.get(buttons.size() - 1);
-		}
+            buttons.add(new MyButton("Del frame", new Runnable() {
+                public void run() {
+                    sheet.sprites.getSelectedSprite().delFrame(SpriteHandler.instance.selectedFrame - 1);
+                }
+            }));
+            delFrameButton = buttons.get(buttons.size() - 1);
+        }
 
-		imagesCombo = new JComboBox<String>();
-		imagesCombo.addActionListener(this);
+        imagesCombo = new JComboBox<String>();
+        imagesCombo.addActionListener(this);
 
-		middleSpriteButton = new JLabel("0/0");
-		middleSpriteButton.setHorizontalAlignment(SwingConstants.CENTER);
-		middleSpriteButton.setVerticalAlignment(SwingConstants.CENTER);
+        middleSpriteButton = new JLabel("0/0");
+        middleSpriteButton.setHorizontalAlignment(SwingConstants.CENTER);
+        middleSpriteButton.setVerticalAlignment(SwingConstants.CENTER);
 
-		spriteCanvas = new SpriteCanvas(this);
+        spriteCanvas = new SpriteCanvas(this);
 
-		sheet = new SpriteSheet();
+        sheet = new SpriteSheet();
 
-		selectedFrame = 0;
-		numberOfFrames = 0;
+        selectedFrame = 0;
+        numberOfFrames = 0;
 
-		zoom = 1;
-		cameraX = 0;
-		cameraY = 0;
+        zoom = 1;
+        cameraX = 0;
+        cameraY = 0;
 
-		isKeyPressed = ' ';
+        isKeyPressed = ' ';
 
-		for (JButton button : buttons) {
-			button.addActionListener(this);
-		}
-		redrawAll();
-	}
+        for (JButton button : buttons) {
+            button.addActionListener(this);
+        }
+        redrawAll();
+    }
 
-	protected void zoomIn() {
-		SpriteHandler.instance.zoom <<= 1;
-	}
+    protected void zoomIn() {
+        SpriteHandler.instance.zoom <<= 1;
+    }
 
-	protected void zoomOut() {
-		if (SpriteHandler.instance.zoom > 1)
-			SpriteHandler.instance.zoom >>= 1;
-	}
+    protected void zoomOut() {
+        if (SpriteHandler.instance.zoom > 1)
+            SpriteHandler.instance.zoom >>= 1;
+    }
 
-	protected void removeImage(int index) {
-		if (index != -1 && index <= sheet.spritesImages.size()) {
-			sheet.spritesImages.remove(index);
-			sheet.spritesImagesPosition.remove(index);
-			sheet.spritesImagesPath.remove(index);
-			imagesCombo.removeItemAt(index);
-		}
-	}
+    protected void removeImage(int index) {
+        if (index != -1 && index <= sheet.spritesImages.size()) {
+            sheet.spritesImages.remove(index);
+            sheet.spritesImagesPosition.remove(index);
+            sheet.spritesImagesPath.remove(index);
+            imagesCombo.removeItemAt(index);
+        }
+    }
 
-	protected void addImage(File file) {
-	    String sheetPath = SpriteHandler.instance.sheet.filename;
+    protected void addImage(File file) {
+        String sheetPath = SpriteHandler.instance.sheet.filename;
         String imagePath = file.getAbsolutePath();
 
         String relativePath = imagePath;
-        if(sheetPath != null) {
+        if (sheetPath != null) {
             Path image = Paths.get(imagePath);
             Path sheet = Paths.get(sheetPath);
-            relativePath = sheet.relativize(image).toString(); 
+            relativePath = sheet.relativize(image).toString();
         }
 
-		addImage(relativePath, file, 0, 0);
-	}
+        addImage(relativePath, file, 0, 0);
+    }
 
-	public void addImage(String imagePath, File file, int x, int y) {
-		BufferedImage img = null;
-		try {
-			img = ImageIO.read(file);
-			sheet.spritesImages.add(img);
-			sheet.spritesImagesPosition.add(new Point(x, y));
-			sheet.spritesImagesPath.add(imagePath);
-			imagesCombo.addItem(file.getName());
-		} catch (IOException e) {
-		}
-	}
+    public void addImage(String imagePath, File file, int x, int y) {
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(file);
+            sheet.spritesImages.add(img);
+            sheet.spritesImagesPosition.add(new Point(x, y));
+            sheet.spritesImagesPath.add(imagePath);
+            imagesCombo.addItem(file.getName());
+        } catch (IOException e) {
+        }
+    }
 
-	public void setWindow(JFrame win) {
-		this.window = win;
-	}
+    public void setWindow(JFrame win) {
+        this.window = win;
+    }
 
-	public JPanel getZoomInOutButton() {
-		JPanel doublePanel = new JPanel();
-		doublePanel.setLayout(new GridLayout(1, 2));
-		doublePanel.add(zoomInButton);
-		doublePanel.add(zoomOutButton);
-		return doublePanel;
-	}
+    public JPanel getZoomInOutButton() {
+        JPanel doublePanel = new JPanel();
+        doublePanel.setLayout(new GridLayout(1, 2));
+        doublePanel.add(zoomInButton);
+        doublePanel.add(zoomOutButton);
+        return doublePanel;
+    }
 
-	public JPanel getAddImageButton() {
-		JPanel doublePanel = new JPanel();
-		doublePanel.setLayout(new GridLayout(1, 2));
-		doublePanel.add(addImageButton);
-		doublePanel.add(delImageButton);
-		return doublePanel;
-	}
+    public JPanel getAddImageButton() {
+        JPanel doublePanel = new JPanel();
+        doublePanel.setLayout(new GridLayout(1, 2));
+        doublePanel.add(addImageButton);
+        doublePanel.add(delImageButton);
+        return doublePanel;
+    }
 
-	public JPanel getImageButton() {
-		JPanel doublePanel = new JPanel();
-		doublePanel.setLayout(new GridLayout(1, 3));
-		doublePanel.add(openImageButton);
-		doublePanel.add(saveImageButton);
-		doublePanel.add(exportImageButton);
-		return doublePanel;
-	}
+    public JPanel getImageButton() {
+        JPanel doublePanel = new JPanel();
+        doublePanel.setLayout(new GridLayout(1, 3));
+        doublePanel.add(openImageButton);
+        doublePanel.add(saveImageButton);
+        doublePanel.add(exportImageButton);
+        return doublePanel;
+    }
 
-	public JComboBox<String> getImagesCombo() {
-		return imagesCombo;
-	}
+    public JComboBox<String> getImagesCombo() {
+        return imagesCombo;
+    }
 
-	public JPanel getSpriteButton() {
-		JPanel doublePanel = new JPanel();
-		doublePanel.setLayout(new GridLayout(1, 2));
-		doublePanel.add(addSpriteButton);
-		doublePanel.add(delSpriteButton);
-		return doublePanel;
-	}
+    public JPanel getSpriteButton() {
+        JPanel doublePanel = new JPanel();
+        doublePanel.setLayout(new GridLayout(1, 2));
+        doublePanel.add(addSpriteButton);
+        doublePanel.add(delSpriteButton);
+        return doublePanel;
+    }
 
-	public JPanel getSpriteIndicator() {
-		JPanel doublePanel = new JPanel();
-		doublePanel.setLayout(new GridLayout(1, 3));
-		doublePanel.add(leftSpriteButton);
-		doublePanel.add(middleSpriteButton);
-		doublePanel.add(rightSpriteButton);
-		return doublePanel;
-	}
+    public JPanel getSpriteIndicator() {
+        JPanel doublePanel = new JPanel();
+        doublePanel.setLayout(new GridLayout(1, 3));
+        doublePanel.add(leftSpriteButton);
+        doublePanel.add(middleSpriteButton);
+        doublePanel.add(rightSpriteButton);
+        return doublePanel;
+    }
 
-	public JPanel getFrameButton() {
-		JPanel doublePanel = new JPanel();
-		doublePanel.setLayout(new GridLayout(1, 2));
-		doublePanel.add(addFrameButton);
-		doublePanel.add(delFrameButton);
-		return doublePanel;
-	}
+    public JPanel getFrameButton() {
+        JPanel doublePanel = new JPanel();
+        doublePanel.setLayout(new GridLayout(1, 2));
+        doublePanel.add(addFrameButton);
+        doublePanel.add(delFrameButton);
+        return doublePanel;
+    }
 
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource() instanceof MyButton) {
-			MyButton button = (MyButton) e.getSource();
-			button.doAction();
-		}
-		redrawAll();
-		resetFocus();
-	}
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() instanceof MyButton) {
+            MyButton button = (MyButton) e.getSource();
+            button.doAction();
+        }
+        redrawAll();
+        resetFocus();
+    }
 
-	public SpriteCanvas getCanvas() {
-		return spriteCanvas;
-	}
+    public SpriteCanvas getCanvas() {
+        return spriteCanvas;
+    }
 
-	public void keyPressed(KeyEvent e) {
-		char c = e.getKeyChar();
-		if (c == 'q' || c == 'e' || c == 'c' || c == 'p') {
-			isKeyPressed = c;
-			if(c == 'p') {
-				this.spriteCanvas.preview.refreshImage();
-			}
-			this.spriteCanvas.doMouseMove();
-		}
-		int code = e.getKeyCode();
-		if (code == KeyEvent.VK_LEFT) {
-			Sprite sprite = this.sheet.sprites.getSelectedSprite();
-			if (sprite != null) {
-				this.selectedFrame--;
-				if (this.selectedFrame == 0) {
-					this.selectedFrame = sprite.frames.size();
-				}
-			}
-		}
-		if (code == KeyEvent.VK_RIGHT) {
-			Sprite sprite = this.sheet.sprites.getSelectedSprite();
-			if (sprite != null) {
-				this.selectedFrame++;
-				if (this.selectedFrame > sprite.frames.size()) {
+    public void keyPressed(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (c == 'q' || c == 'e' || c == 'c' || c == 'p' || c == 'r' || c == 'y') {
+            isKeyPressed = c;
+            if (c == 'p') {
+                this.spriteCanvas.preview.refreshImage();
+            }
+            this.spriteCanvas.doMouseMove();
+        }
+        int code = e.getKeyCode();
+        if (code == KeyEvent.VK_LEFT) {
+            Sprite sprite = this.sheet.sprites.getSelectedSprite();
+            if (sprite != null) {
+                this.selectedFrame--;
+                if (this.selectedFrame == 0) {
+                    this.selectedFrame = sprite.frames.size();
+                }
+            }
+        }
+        if (code == KeyEvent.VK_RIGHT) {
+            Sprite sprite = this.sheet.sprites.getSelectedSprite();
+            if (sprite != null) {
+                this.selectedFrame++;
+                if (this.selectedFrame > sprite.frames.size()) {
 
-					this.selectedFrame = 1;
-				}
-			}
-		}
-		redrawAll();
-	}
+                    this.selectedFrame = 1;
+                }
+            }
+        }
+        redrawAll();
+    }
 
-	public void keyReleased(KeyEvent e) {
-		char c = e.getKeyChar();
-		if (c == 'q' || c == 'e' || c == 'c' || c == 'p') {
-			isKeyPressed = ' ';
-		}
-		redrawAll();
-	}
+    public void keyReleased(KeyEvent e) {
+        char c = e.getKeyChar();
+        if (c == 'q' || c == 'e' || c == 'c' || c == 'p' || c == 'r' || c == 'y') {
+            isKeyPressed = ' ';
+        }
+        redrawAll();
+    }
 
-	public void keyTyped(KeyEvent e) {
-		char c = e.getKeyChar();
-		int move = 16 * (5 - (int) (Math.log(zoom) / Math.log(2)));
-		if (c == 'w')
-			this.cameraY -= move;
-		if (c == 's')
-			this.cameraY += move;
-		if (c == 'a')
-			this.cameraX -= move;
-		if (c == 'd')
-			this.cameraX += move;
-		if (c == 'r')
-			this.cameraX = this.cameraY = 0;
-		if (c == 'z') {
-			int x = spriteCanvas.mouseX / zoom + this.cameraX;
-			int y = spriteCanvas.mouseY / zoom + this.cameraY;
-			sheet.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).x = x;
-			sheet.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).y = y;
+    public void keyTyped(KeyEvent e) {
+        char c = e.getKeyChar();
+        int move = 16 * (5 - (int) (Math.log(zoom) / Math.log(2)));
+        if (c == 'w')
+            this.cameraY -= move;
+        if (c == 's')
+            this.cameraY += move;
+        if (c == 'a')
+            this.cameraX -= move;
+        if (c == 'd')
+            this.cameraX += move;
+        if (c == 'z') {
+            int x = spriteCanvas.mouseX / zoom + this.cameraX;
+            int y = spriteCanvas.mouseY / zoom + this.cameraY;
+            sheet.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).x = x;
+            sheet.spritesImagesPosition.get(imagesCombo.getSelectedIndex()).y = y;
 
-			this.spriteCanvas.preview.refreshImage();
-		}
-		if (c == '+') {
-			this.zoomIn();
-		}
-		if (c == '-') {
-			this.zoomOut();
-		}
-		if (this.cameraX < -4)
-			this.cameraX = -4;
-		if (this.cameraY < -4)
-			this.cameraY = -4;
-		redrawAll();
-	}
+            this.spriteCanvas.preview.refreshImage();
+        }
+        if (c == 't') {
+            spriteCanvas.drawPhysics = !spriteCanvas.drawPhysics;
+        }
+        if (c == '+') {
+            this.zoomIn();
+        }
+        if (c == '-') {
+            this.zoomOut();
+        }
+        if (this.cameraX < -4)
+            this.cameraX = -4;
+        if (this.cameraY < -4)
+            this.cameraY = -4;
+        redrawAll();
+    }
 
-	public void itemStateChanged(ItemEvent e) {
-		refreshCounter();
-		redrawAll();
-		resetFocus();
-	}
+    public void itemStateChanged(ItemEvent e) {
+        refreshCounter();
+        redrawAll();
+        resetFocus();
+    }
 
-	private void refreshCounter() {
-		if (sheet.sprites != null && sheet.sprites.getSelectedSprite() != null) {
-			this.numberOfFrames = sheet.sprites.getSelectedSprite().frames.size();
-			if (this.selectedFrame > this.numberOfFrames)
-				this.selectedFrame = this.numberOfFrames;
-			if (this.selectedFrame <= 0)
-				this.selectedFrame = 1;
-			this.middleSpriteButton.setText(this.selectedFrame + "/" + this.numberOfFrames);
-		}
-	}
+    private void refreshCounter() {
+        if (sheet.sprites != null && sheet.sprites.getSelectedSprite() != null) {
+            this.numberOfFrames = sheet.sprites.getSelectedSprite().frames.size();
+            if (this.selectedFrame > this.numberOfFrames)
+                this.selectedFrame = this.numberOfFrames;
+            if (this.selectedFrame <= 0)
+                this.selectedFrame = 1;
+            this.middleSpriteButton.setText(this.selectedFrame + "/" + this.numberOfFrames);
+        }
+    }
 
-	public void redrawAll() {
-		refreshCounter();
-		this.spriteCanvas.repaint();
-		if (sheet.sprites != null)
-			sheet.sprites.repaint();
-	}
+    public void redrawAll() {
+        refreshCounter();
+        this.spriteCanvas.repaint();
+        if (sheet.sprites != null)
+            sheet.sprites.repaint();
+    }
 
-	public void resetFocus() {
-		this.spriteCanvas.grabFocus();
-	}
+    public void resetFocus() {
+        this.spriteCanvas.grabFocus();
+    }
 
-	public void setFramePosition(int x, int y) {
-		Sprite spr = sheet.sprites.getSelectedSprite();
-		if (spr != null) {
-			x = x / zoom + this.cameraX;
-			y = y / zoom + this.cameraY;
-			spr.frames.get(selectedFrame - 1).box.x = x;
-			spr.frames.get(selectedFrame - 1).box.y = y;
-		}
-	}
+    public void setFramePosition(int x, int y) {
+        Sprite spr = sheet.sprites.getSelectedSprite();
+        if (spr != null) {
+            x = x / zoom + this.cameraX;
+            y = y / zoom + this.cameraY;
+            spr.frames.get(selectedFrame - 1).box.x = x;
+            spr.frames.get(selectedFrame - 1).box.y = y;
+        }
+    }
 
-	public void setFrameSize(int newX, int newY) {
-		Sprite spr = sheet.sprites.getSelectedSprite();
-		if (spr != null) {
-			int x = spr.frames.get(selectedFrame - 1).box.x;
-			int y = spr.frames.get(selectedFrame - 1).box.y;
-			int w = newX / zoom + this.cameraX;
-			int h = newY / zoom + this.cameraY;
-			spr.frames.get(selectedFrame - 1).box.width = w - x;
-			spr.frames.get(selectedFrame - 1).box.height = h - y;
-		}
-	}
+    public void setFrameSize(int newX, int newY) {
+        Sprite spr = sheet.sprites.getSelectedSprite();
+        if (spr != null) {
+            int x = spr.frames.get(selectedFrame - 1).box.x;
+            int y = spr.frames.get(selectedFrame - 1).box.y;
+            int w = newX / zoom + this.cameraX;
+            int h = newY / zoom + this.cameraY;
+            spr.frames.get(selectedFrame - 1).box.width = w - x;
+            spr.frames.get(selectedFrame - 1).box.height = h - y;
+        }
+    }
 
-	public void setFrameCenter(int x, int y) {
-		Sprite spr = sheet.sprites.getSelectedSprite();
-		if (spr != null) {
-			x = x / zoom + this.cameraX;
-			y = y / zoom + this.cameraY;
-			int xb = spr.frames.get(selectedFrame - 1).box.x;
-			int yb = spr.frames.get(selectedFrame - 1).box.y;
-			spr.frames.get(selectedFrame - 1).center.x = x - xb;
-			spr.frames.get(selectedFrame - 1).center.y = y - yb;
-		}
-	}
+    public void setFrameCenter(int x, int y) {
+        Sprite spr = sheet.sprites.getSelectedSprite();
+        if (spr != null) {
+            x = x / zoom + this.cameraX;
+            y = y / zoom + this.cameraY;
+            int xb = spr.frames.get(selectedFrame - 1).box.x;
+            int yb = spr.frames.get(selectedFrame - 1).box.y;
+            spr.frames.get(selectedFrame - 1).center.x = x - xb;
+            spr.frames.get(selectedFrame - 1).center.y = y - yb;
+        }
+    }
 
-	public void setAnimationListArea(SpriteAnimationListArea listArea) {
-		sheet.sprites = listArea;
-	}
+    public void setColliderPosition(int newX, int newY) {
+        Sprite spr = sheet.sprites.getSelectedSprite();
+        if (spr != null) {
+            int x = spr.frames.get(selectedFrame - 1).box.x;
+            int y = spr.frames.get(selectedFrame - 1).box.y;
+            int xb = newX / zoom + this.cameraX;
+            int yb = newY / zoom + this.cameraY;
+            spr.frames.get(selectedFrame - 1).boundingBox.x = xb - x;
+            spr.frames.get(selectedFrame - 1).boundingBox.y = yb - y;
+        }
+    }
+
+    public void setColliderSize(int newX, int newY) {
+        Sprite spr = sheet.sprites.getSelectedSprite();
+        if (spr != null) {
+            int x = spr.frames.get(selectedFrame - 1).box.x;
+            int y = spr.frames.get(selectedFrame - 1).box.y;
+            int xb = spr.frames.get(selectedFrame - 1).boundingBox.x;
+            int yb = spr.frames.get(selectedFrame - 1).boundingBox.y;
+            int wb = newX / zoom + this.cameraX;
+            int hb = newY / zoom + this.cameraY;
+            spr.frames.get(selectedFrame - 1).boundingBox.width = wb - x - xb;
+            spr.frames.get(selectedFrame - 1).boundingBox.height = hb - y - yb;
+        }
+    }
+
+    public void setAnimationListArea(SpriteAnimationListArea listArea) {
+        sheet.sprites = listArea;
+    }
 }

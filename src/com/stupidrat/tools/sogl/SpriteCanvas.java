@@ -26,6 +26,8 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
 
     public AnimationPreviewRenderer preview;
 
+    public boolean drawPhysics;
+
     public SpriteCanvas(SpriteHandler handler) {
         this.setVisible(true);
         this.handler = handler;
@@ -48,11 +50,11 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
     @Override
     public void paint(Graphics g) {
         graphics = g;
-        render(g, SpriteHandler.instance.sheet, true, handler.cameraX, handler.cameraY, handler.zoom);
+        render(g, SpriteHandler.instance.sheet, true, drawPhysics, handler.cameraX, handler.cameraY, handler.zoom);
         this.preview.paint(g);
     }
 
-    public void render(Graphics g, SpriteSheet sheet, boolean grid, int cameraX, int cameraY, int zoom) {
+    public void render(Graphics g, SpriteSheet sheet, boolean grid, boolean physics, int cameraX, int cameraY, int zoom) {
         if (grid) {
             g.setColor(Color.darkGray);
             g.fillRect(0, 0, this.getWidth(), this.getHeight());
@@ -83,6 +85,18 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
                                                              spriteName, cameraX, cameraY, zoom, 0);
             }
         }
+        
+        if(physics) {
+            g.setColor(new Color(255,0,0,130));
+            if (sheet.sprites.getSelectedSprite() != null && SpriteHandler.instance.selectedFrame > 0
+                    && sheet.sprites.getSelectedSprite().frames.size() > 0) {
+                for (int i = 0; i < sheet.sprites.getSelectedSprite().frames.size(); i++) {
+                    sheet.sprites.getSelectedSprite().frames.get(i).drawCollider(g, cameraX, cameraY, zoom);
+                }
+                g.setColor(new Color(255,255,0,130));
+                sheet.sprites.getSelectedSprite().frames.get(SpriteHandler.instance.selectedFrame - 1).drawCollider(g, cameraX, cameraY, zoom);
+            }
+        }
     }
 
     public void mouseDragged(MouseEvent e) {
@@ -99,6 +113,10 @@ public class SpriteCanvas extends JPanel implements MouseMotionListener, MouseLi
             handler.setFrameSize(this.mouseX, this.mouseY);
         if (handler.isKeyPressed == 'c')
             handler.setFrameCenter(this.mouseX, this.mouseY);
+        if (handler.isKeyPressed == 'r')
+            handler.setColliderPosition(this.mouseX, this.mouseY);
+        if (handler.isKeyPressed == 'y')
+            handler.setColliderSize(this.mouseX, this.mouseY);
         if (handler.isKeyPressed == 'p')
             preview.setPosition(this.mouseX, this.mouseY);
     }

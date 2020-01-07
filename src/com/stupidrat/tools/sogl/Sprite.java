@@ -30,8 +30,8 @@ public class Sprite {
         }
 	}
 
-	public void addFrame(Rectangle box, Point center){
-        frames.add(new Frame(box, center));
+	public void addFrame(Rectangle box, Rectangle boundingBox, Point center){
+        frames.add(new Frame(box, boundingBox, center));
     }
 
     public void delFrame(int selectedFrame) {
@@ -58,9 +58,13 @@ public class Sprite {
             int y = scan.nextInt();
             int w = scan.nextInt();
             int h = scan.nextInt();
+            int bx = scan.nextInt();
+            int by = scan.nextInt();
+            int bw = scan.nextInt();
+            int bh = scan.nextInt();
             int cx = scan.nextInt();
             int cy = scan.nextInt();
-            Frame frame = new Frame(new Rectangle(x,y,w,h), new Point(cx,cy));
+            Frame frame = new Frame(new Rectangle(x,y,w,h), new Rectangle(bx,by,bw,bh), new Point(cx,cy));
             spr.frames.add(frame);
         }
         scan.close();

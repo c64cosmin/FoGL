@@ -59,12 +59,16 @@ int main(int argn, char** argv){
             //write number of frames
             writeInt(n_frame, out);
             for(int i=0;i<n_frame;i++){
-                int x,y,w,h,cx,cy;
-                fscanf(f, "%i %i %i %i %i %i", &x, &y, &w, &h, &cx, &cy);
+                int x,y,w,h,bx,by,bw,bh,cx,cy;
+                fscanf(f, "%i %i %i %i %i %i %i %i %i %i", &x, &y, &w, &h, &bx, &by, &bw, &bh, &cx, &cy);
                 writeLInt(x, out);
                 writeLInt(y, out);
                 writeInt(w, out);
                 writeInt(h, out);
+                writeLInt(bx, out);
+                writeLInt(by, out);
+                writeInt(bw, out);
+                writeInt(bh, out);
                 writeInt(cx, out);
                 writeInt(cy, out);
             }
